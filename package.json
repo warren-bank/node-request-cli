@@ -1,0 +1,23 @@
+{
+  "name": "@warren-bank/node-request-cli",
+  "version": "1.0.0",
+  "main": "",
+  "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects.",
+  "author": "Warren Bank (https://github.com/warren-bank)",
+  "license": "GPL-2.0",
+  "bin": {
+    "nget": "bin/nget.js"
+  },
+  "dependencies": {
+    "@warren-bank/node-request": "^2.0.0"
+  },
+  "author": {
+    "name": "Warren R. Bank",
+    "email": "warren.r.bank@gmail.com",
+    "url": "https://github.com/warren-bank"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/warren-bank/node-request-cli"
+  }
+}

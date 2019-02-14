@@ -1,0 +1,2 @@
+https://github.com/warren-bank/print-apk-signature/archive/apksigner.zip
+https://github.com/warren-bank/print-apk-signature/archive/keytool.zip

@@ -28,3 +28,6 @@ nget --url "https://github.com/warren-bank/node-request/archive/master.zip" -P "
 
 nget --url "https://httpbin.org/cookies/set/foo/bar" --load-cookies "${workspace}/cookies/cookie.json" -O "${workspace}/cookies/1-set.txt" --save-headers --no-follow-redirect --no-validate-status-code
 nget --url "https://httpbin.org/cookies"             --load-cookies "${workspace}/cookies/cookie.json" -O "${workspace}/cookies/2-get.txt"
+
+nget-convert-cookiefile --json-to-text --in "${workspace}/cookies/cookie.json"          --out "${workspace}/cookies/cookie.convert-1.txt"
+nget-convert-cookiefile --text-to-json --in "${workspace}/cookies/cookie.convert-1.txt" --out "${workspace}/cookies/cookie.convert-2.json"

@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 
 const extract_filename = (header, URL) => {
-  const filename = extract_filename_header(header) || extract_filename_URL(URL) || ''
+  const filename = extract_filename_header(header) || extract_filename_URL(URL) || get_hash(URL)
   return filename
 }
 
@@ -33,6 +33,15 @@ const extract_filename_URL = (URL) => {
   if (match && (match.length >= 2)) return match[1]
 
   return ''
+}
+
+// -----------------------------------------------------------------------------
+
+const get_hash = (URL, algorithm='sha256') => {
+  const crypto = require('crypto')
+  const hash   = crypto.createHash(algorithm)
+  hash.update(URL)
+  return hash.digest('hex')
 }
 
 // -----------------------------------------------------------------------------

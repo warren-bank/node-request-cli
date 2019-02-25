@@ -1,0 +1,2 @@
+https://github.com/warren-bank/print-apk-signature/archive/apksigner.zip		my_apksigner.zip			# This file is tab (\t) delimited. The parser only uses the first 2 values in each line. Additional values are ignored, which allows adding comments.
+https://github.com/warren-bank/print-apk-signature/archive/keytool.zip			foo/bar/baz/keytool.zip		# Relative path is created relative to "--directory-prefix" or, if undefined, the current working directory.

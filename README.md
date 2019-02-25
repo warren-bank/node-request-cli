@@ -1,6 +1,6 @@
 ### [Nget](https://github.com/warren-bank/node-request-cli)
 
-An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects.
+An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies.
 
 #### Installation:
 
@@ -43,6 +43,13 @@ options:
 "-i <filepath>"
 "--input-file <filepath>"
     Read URLs from a local text file. Format is one URL per line.
+    Each line is parsed as a collection of tab-separated values:
+      - 1st value must always be the URL
+      - 2nd value is an optional output document filepath
+          * absolute paths are supported
+          * relative paths are supported and resolved relative to "--directory-prefix"
+            or, if undefined, the current working directory
+      - all subsequent values are ignored as comments
 
 "--headers <filepath>"
     Read request headers from a local text file. Format is JSON. Data structure is an Object. Keys contain header name. Values contain header value.
@@ -63,6 +70,7 @@ options:
 
 "--method <value>"
     HTTP verb. Value must be one of: "GET","HEAD","POST","PUT","DELETE","CONNECT","OPTIONS","TRACE","PATCH"
+    The default is "GET", which changes to "POST" when "--post-data" or "--post-file" are defined.
 
 "--post-data <data>"
     Specifies a string to send as POST data.
@@ -73,7 +81,8 @@ options:
     By default, the 'Content-Type' request header will contain: 'application/x-www-form-urlencoded'
 
 "--max-redirect <number>"
-    Specifies the maximum number of redirections to follow for a resource. The default is 10.
+    Specifies the maximum number of redirections to follow for a resource.
+    The default is 10.
 
 "--no-follow-redirect"
     Do not follow any redirections.
@@ -94,14 +103,13 @@ options:
 
 "-P <dirpath>"
 "--directory-prefix <dirpath>"
-    Specifies the directory where all file downloads will be saved to. The default is "." (the current directory).
+    Specifies the directory where all file downloads will be saved to.
+    The default is "." (the current directory).
 
 "-O <filepath>"
 "--output-document <filepath>"
-    Specifies where all file downloads will be saved to.
-    This option pairs poorly with: "--input-file"
-      * Wget would concatenate all file downloads together.
-      * Nget will overwrite each file download, and only store the last.
+    Specifies where "--url" will be saved.
+    Does not apply to URLs read from "--input-file".
 
 "--content-disposition"
     Indicates that the file download should be saved with the filename obtained from the 'Content-Disposition' response header.

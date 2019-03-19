@@ -38,7 +38,7 @@ const get_merged_argv_flags = function(){
 }
 
 const normalize_argv_vals = function(){
-  if (! argv_vals instanceof Object) return
+  if (!(argv_vals instanceof Object)) return
 
   let key, argv_val, aliases, alias
 

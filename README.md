@@ -167,6 +167,12 @@ options:
 
 * [this test script](https://github.com/warren-bank/node-request-cli/blob/master/tests/run.sh) is a good introduction
 
+#### Usage as an Embedded Library:
+
+* without cluttering the README with too much technical info, I will quickly mention that:
+  * all functionality can be imported as a function:<br>`const {download} = require('@warren-bank/node-request-cli')`
+  * all command-line options can be specified at runtime in a configuration object passed to the function:<br>`download({})`
+
 #### Requirements:
 
 * Node version: v6.4.0 (and higher)

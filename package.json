@@ -1,7 +1,7 @@
 {
   "name": "@warren-bank/node-request-cli",
-  "version": "3.0.0",
-  "main": "",
+  "version": "3.1.0",
+  "main": "lib/process_cli.js",
   "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies.",
   "author": "Warren Bank (https://github.com/warren-bank)",
   "license": "GPL-2.0",

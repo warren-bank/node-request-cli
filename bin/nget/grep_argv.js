@@ -20,7 +20,12 @@ const retrieve_flag_value = function(flag_opts, args, index, throw_error_if_valu
       if (flag_opts && flag_opts["num"]) {
         val = Number(val)
 
-        if (isNaN(val)) val = ""
+        if (isNaN(val)) {
+          val = ""
+        }
+        else if ( (typeof flag_opts["num"] === "string") && (flag_opts["num"].toLowerCase() === "int") ) {
+          val = Math.floor(val)
+        }
       }
 
       if (flag_opts && Array.isArray(flag_opts["enum"])) {

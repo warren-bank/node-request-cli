@@ -17,6 +17,7 @@ mkdir "%workspace%\O"
 mkdir "%workspace%\P"
 mkdir "%workspace%\i_old"
 mkdir "%workspace%\i_new"
+mkdir "%workspace%\i_now"
 mkdir "%workspace%\cookies"
 
 call nget --help >"help.txt"
@@ -27,6 +28,7 @@ call nget --url "https://github.com/warren-bank/node-request/archive/master.zip"
 call nget --url "https://github.com/warren-bank/node-request/archive/master.zip" -P "%workspace%\P"
 call nget --url "https://github.com/warren-bank/node-request/archive/master.zip" -P "%workspace%\i_old" -i "%DIR%\.etc\urls_old.txt"
 call nget --url "https://github.com/warren-bank/node-request/archive/master.zip" -P "%workspace%\i_new" -i "%DIR%\.etc\urls_new.txt"
+call nget                                                                        -P "%workspace%\i_now" -i "%DIR%\.etc\urls_now.txt" --mc 5
 
 call nget --url "https://httpbin.org/cookies/set/foo/bar" --load-cookies "%workspace%\cookies\cookie.json" -O "%workspace%\cookies\1-set.txt" --save-headers --no-follow-redirect --no-validate-status-code
 call nget --url "https://httpbin.org/cookies"             --load-cookies "%workspace%\cookies\cookie.json" -O "%workspace%\cookies\2-get.txt"

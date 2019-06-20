@@ -32,15 +32,18 @@ if (argv_vals["--load-cookies"]) {
 
 let urls = []
 if (argv_vals["--input-file"] && argv_vals["--input-file"].length) {
-  urls = argv_vals["--input-file"].map(url => url.trim().split(/[\t]+/))  // Array<url, output_filepath>
+  urls = argv_vals["--input-file"]
+    .map(url => url.trim().split(/[\t]+/))                                  // Array<url, output_filepath>
+    .filter(urldata => ((urldata[0].length) && (urldata[0][0] !== "#")))    // ignore empty lines, and lines that begin with "#"
 }
 if (argv_vals["--url"]) {
   urls.push(argv_vals["--url"])  // String<url>
 }
 
-// download URLs sequentially
-const process_download_queue = async function(){
-  while(urls.length){
+// -----------------------------------------------------------------------------
+// download next URL; returns a Promise
+
+const download_next_url = function(){
     let urldata = urls.shift()
     let url     = Array.isArray(urldata) ? urldata[0] : urldata
 
@@ -52,7 +55,7 @@ const process_download_queue = async function(){
 
     let _config = {...config}
 
-    await request(_options, argv_vals["--post-data"], _config)
+    return request(_options, argv_vals["--post-data"], _config)
     .then(({url, redirects, response}) => {
       if (argv_vals["--server-response"]) {
         console.log(`url: ${url}\nheaders: ${JSON.stringify(response.headers, null, 2)}\n`)
@@ -114,7 +117,50 @@ const process_download_queue = async function(){
     .catch((error) => {
       console.log(`url: ${url}\nerror: ${error.message}\n`)
     })
+}
+
+// -----------------------------------------------------------------------------
+// download URLs sequentially
+
+const process_download_queue_sequentially = async function(){
+  while(urls.length){
+    await download_next_url()
   }
 }
 
-process_download_queue()
+// -----------------------------------------------------------------------------
+// download URLs concurrently
+
+let active_download_count = 0
+
+const process_download_queue_concurrently = function(){
+  if (active_download_count >= argv_vals["--max-concurrency"])
+    return
+
+  if (!urls.length && !active_download_count)
+    process.exit(0)
+
+  if (!urls.length)
+    return
+
+  active_download_count++
+
+  download_next_url()
+  .then(() => {
+    active_download_count--
+    process_download_queue_concurrently()
+  })
+
+  if (active_download_count < argv_vals["--max-concurrency"])
+    process_download_queue_concurrently()
+}
+
+// -----------------------------------------------------------------------------
+// download URLs
+
+if (argv_vals["--max-concurrency"] && (argv_vals["--max-concurrency"] >= 2)) {
+  process_download_queue_concurrently()
+}
+else {
+  process_download_queue_sequentially()
+}

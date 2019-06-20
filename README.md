@@ -51,6 +51,12 @@ options:
             or, if undefined, the current working directory
       - all subsequent values are ignored as comments
 
+"--mc" <integer>
+"--max-concurrency" <integer>
+"--threads" <integer>
+    Specify the maximum number of URLs to download in parallel.
+    The default is 1, which processes the download queue sequentially.
+
 "--headers <filepath>"
     Read request headers from a local text file. Format is JSON. Data structure is an Object. Keys contain header name. Values contain header value.
 

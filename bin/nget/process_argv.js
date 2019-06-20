@@ -9,6 +9,7 @@ const argv_flags = {
 
   "--url":                                  {},
   "--input-file":                           {file: "lines"},
+  "--max-concurrency":                      {num:  "int"},
 
   "--headers":                              {file: "json"},
   "--referer":                              {},
@@ -43,6 +44,7 @@ const argv_flag_aliases = {
   "--version":                              ["-V"],
   "--url":                                  ["-u"],
   "--input-file":                           ["-i"],
+  "--max-concurrency":                      ["--mc", "--threads"],
   "--user-agent":                           ["-U"],
   "--directory-prefix":                     ["-P"],
   "--output-document":                      ["-O"],

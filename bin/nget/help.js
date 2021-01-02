@@ -67,6 +67,9 @@ options:
     Specifies the maximum number of redirections to follow for a resource.
     The default is 10.
 
+"--no-check-certificate"
+    Do not check HTTPS TLS/SSL certificates.
+
 "--no-follow-redirect"
     Do not follow any redirections.
 

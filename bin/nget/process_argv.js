@@ -24,6 +24,7 @@ const argv_flags = {
   "--max-redirect":                         {num:  true},
 //"--binary":                               {bool: true},
 //"--stream":                               {bool: true},
+  "--no-check-certificate":                 {bool: true},
   "--no-follow-redirect":                   {bool: true},
   "--no-validate-status-code":              {bool: true},
 
@@ -135,6 +136,16 @@ argv_vals["--method"] = (
          : "GET"
      )
 )
+
+// =============================================================================
+// references:
+// =============================================================================
+//   https://nodejs.org/api/cli.html#cli_environment_variables
+//   https://nodejs.org/api/cli.html#cli_node_tls_reject_unauthorized_value
+// =============================================================================
+if (argv_vals["--no-check-certificate"]) {
+  process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0
+}
 
 if (argv_vals["--no-cookies"]) {
   argv_vals["--load-cookies"] = ""

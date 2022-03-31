@@ -1,0 +1,54 @@
+--------------------------------------------------------------------------------
+
+problem:
+========
+https://github.com/warren-bank/node-request/blob/v2.0.7/lib/url_utils.js#L127
+
+summary:
+========
+the embedded URL in the request path is broken when normalizePath() is called.
+
+example:
+========
+  input:
+    /5000/http://worldtimeapi.org/api/timezone/Etc/UTC
+  output:
+    /5000/http:/worldtimeapi.org/api/timezone/Etc/UTC
+
+----------------------------------------
+
+methodology:
+============
+
+const path = require('path')
+const url  = require('url')
+
+{
+  const $url = 'https://deelay.me/5000/http://worldtimeapi.org/api/timezone/Etc/UTC'
+
+  let $path
+  $path = url.parse($url).path
+  $path = path.posix.normalize($path)
+
+  console.log($path)
+}
+
+/*
+ * output:
+ *   /5000/http:/worldtimeapi.org/api/timezone/Etc/UTC
+ */
+
+----------------------------------------
+
+workaround:
+===========
+omit the protocol from the embedded URL in the request path;
+the server adds 'https:' to the 'location' response header.
+
+example:
+========
+curl --insecure --include "https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC"
+
+# Location: https://worldtimeapi.org/api/timezone/Etc/UTC
+
+--------------------------------------------------------------------------------

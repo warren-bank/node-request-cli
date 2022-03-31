@@ -19,7 +19,7 @@ const argv_flags = {
   "--method":                               {enum: ["GET","HEAD","POST","PUT","DELETE","CONNECT","OPTIONS","TRACE","PATCH"]},
 
   "--post-data":                            {},
-  "--post-file":                            {file: true},
+  "--post-file":                            {file: "stream"},
 
   "--max-redirect":                         {num:  true},
 //"--binary":                               {bool: true},
@@ -176,7 +176,7 @@ if (argv_vals["--directory-prefix"]) {
   }
 }
 
-if (argv_vals["--output-document"]) {
+if (argv_vals["--output-document"] && (argv_vals["--output-document"] !== "-")) {
   argv_vals["--output-document"] = path.resolve(argv_vals["--output-document"])
 
   let output_dir = path.dirname(argv_vals["--output-document"])

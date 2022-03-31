@@ -1,31 +1,37 @@
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		01.txt		# "slowwly" is a test service to mock a slow http response. After the specified delay (ex: 5 seconds), it will return a 302 "Location" redirect to the specified destination URL (ex: a JSON time server). In testing concurrency, the timestamps are grouped by the number of parallel downloads; groups are separated by multiples of the delay.
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		02.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		03.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		04.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		05.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		06.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		07.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		08.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		09.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		10.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		11.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		12.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		13.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		14.txt
-# http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldclockapi.com/api/json/utc/now		15.txt
+# ------------------------------------------------------------------------------
+# this service is slow and unreliable:
 
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		01.txt		# "slowwly" is a test service to mock a slow http response. After the specified delay (ex: 5 seconds), it will return a 302 "Location" redirect to the specified destination URL (ex: a JSON time server). In testing concurrency, the timestamps are grouped by the number of parallel downloads; groups are separated by multiples of the delay.
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		02.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		03.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		04.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		05.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		06.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		07.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		08.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		09.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		10.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		11.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		12.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		13.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		14.txt
-http://slowwly.robertomurray.co.uk/delay/5000/url/http://worldtimeapi.org/api/timezone/Etc/UTC		15.txt
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		01.json		# https://requestly.io/feature/delay-request/
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		02.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		03.json		# usage:
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		04.json		#   https://app.requestly.io/delay/<time_in_milliseconds>/<actual_request_url>
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		05.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		06.json		# "delay-request" is a test service to mock a slow http response.
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		07.json		# After the specified delay (ex: 5 seconds), it will return a 301 "Location" redirect to the specified destination URL (ex: a JSON time server).
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		08.json		# In testing concurrency, the timestamps are grouped by the number of parallel downloads; groups are separated by multiples of the delay.
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		09.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		10.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		11.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		12.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		13.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		14.json
+# https://app.requestly.io/delay/5000/worldtimeapi.org/api/timezone/Etc/UTC		15.json
+
+# ------------------------------------------------------------------------------
+# this service works much better:
+
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		01.json		# https://deelay.me/
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		02.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		03.json		# usage:
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		04.json		#   https://deelay.me/<delay in milliseconds>/<original url>
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		05.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		06.json		# "deelay.me" is a test service to mock a slow http response.
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		07.json		# After the specified delay (ex: 5 seconds), it will return a 302 "Location" redirect to the specified destination URL (ex: a JSON time server).
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		08.json		# In testing concurrency, the timestamps are grouped by the number of parallel downloads; groups are separated by multiples of the delay.
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		09.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		10.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		11.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		12.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		13.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		14.json
+https://deelay.me/5000/worldtimeapi.org/api/timezone/Etc/UTC		15.json

@@ -3,6 +3,8 @@ const process_argv = require('@warren-bank/node-process-argv')
 const path = require('path')
 const fs   = require('fs')
 
+const process_post_data = require('./process_post_data')
+
 const argv_flags = {
   "--help":                                 {bool: true},
   "--version":                              {bool: true},
@@ -121,7 +123,8 @@ if (argv_vals["--referer"] || argv_vals["--user-agent"] || argv_vals["--header"]
 }
 
 argv_vals["--post-data"] = (
-     argv_vals["--post-data"]
+     process_post_data(argv_vals["--post-data"])
+  || argv_vals["--post-data"]
   || argv_vals["--post-file"]
   || ""
 )

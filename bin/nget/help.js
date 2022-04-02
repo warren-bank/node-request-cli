@@ -71,12 +71,39 @@ options:
     Specifies a string to send as POST data.
     By default, the 'Content-Type' request header will contain:
       'application/x-www-form-urlencoded'
+    Special tokens:
+      "{{btoa value}}"
+        Replaced by: \`btoa("value")\`
+      "{{atob value}}"
+        Replaced by: \`atob("value")\`
+      "{{+ value}}"
+        Replaced by: \`encodeURIComponent("value")\`
+      "{{- value}}"
+        Replaced by: \`decodeURIComponent("value")\`
+      "{{@ filepath}}"
+        Changes the 'Content-Type' request header to:
+          'multipart/form-data'
+        "filepath" is the path to a file;
+        either absolute or relative to the current working directory.
+        The binary content of such files are included in the request.
+        Use "-" to redirect standard input.
+    Example:
+      --post-data "text_encoded={{+ value to urlencode}}&text_decoded={{- value%20to%20urldecode}}&binary_stdin={{@ -}}&binary_file={{@ /path/to/file}}"
+    When 'content-type: multipart/form-data':
+      All form field names  are automatically urlencoded.
+      All form field values are automatically urldecoded.
+      It is perfectly valid to repeat form field names;
+      the server is responsible to parse the multiple values.
+      Be aware of server-side quirks;
+      for example, PHP requires repeated form fields
+      to obey a naming convention that appends the suffix: '[]'.
 
 "--post-file <filepath>"
     Open as a readable stream. Pipe the binary content to POST data.
     Use "-" to redirect standard input to POST data.
     By default, the 'Content-Type' request header will contain:
       'application/octet-stream'
+    This option is nullified by: "--post-data"
 
 "--max-redirect <number>"
     Specifies the maximum number of redirections to follow.

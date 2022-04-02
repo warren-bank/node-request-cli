@@ -20,6 +20,7 @@ mkdir "${workspace}/i_new"
 mkdir "${workspace}/i_now"
 mkdir "${workspace}/cookies"
 mkdir "${workspace}/stream"
+mkdir "${workspace}/multipart_form_data"
 
 nget --help >'help.txt'
 
@@ -41,3 +42,26 @@ nget-convert-cookiefile --text-to-json --in "${workspace}/cookies/cookie.convert
 nget --url "https://httpbin.org/post" --method "POST" --header "content-type: application/json" -O "${workspace}/stream/1-package.json"       --post-file      "${workspace}/package.json"
 nget --url "https://httpbin.org/post" --method "POST" --header "content-type: application/json" -O "${workspace}/stream/2-package-stdin.json" --post-file "-" <"${workspace}/package.json"
 nget --url "https://httpbin.org/post" --method "POST" --header "content-type: application/json" -O "-"                                        --post-file "-" <"${workspace}/package.json" >"${workspace}/stream/3-package-stdout.json"
+
+node -e 'const post_data = `text_encoded={{+    value to urlencode}}&text_decoded={{-    ${encodeURIComponent("value to urldecode")} }}&binary_stdin={{@ -}}&binary_file={{@ package.json}}`; const process_post_data = require("@warren-bank/node-request-cli/bin/nget/process_post_data"); console.log(process_post_data(post_data))' >"${workspace}/multipart_form_data/1-post-data.json"
+node -e 'const post_data = `text_encoded={{+    value to urlencode}}&text_decoded={{-    ${encodeURIComponent("value to urldecode")} }}`;                                                     const process_post_data = require("@warren-bank/node-request-cli/bin/nget/process_post_data"); console.log(process_post_data(post_data))' >"${workspace}/multipart_form_data/2-post-data.json"
+node -e 'const post_data = `text_encoded={{btoa value to b64encode}}&text_decoded={{atob ${              btoa("value to b64decode")} }}`;                                                     const process_post_data = require("@warren-bank/node-request-cli/bin/nget/process_post_data"); console.log(process_post_data(post_data))' >"${workspace}/multipart_form_data/3-post-data.json"
+
+# -------------
+# using:
+#   https://github.com/warren-bank/node-serve/blob/130002.18.2/.etc/test/www/cgi-bin/echo-post-data/echo-post-data.pl
+# -------------
+
+# absolute path to file piped to stdin stream
+path_abs="${workspace}/../../.gitignore"
+# -------------
+# all "multipart/form-data" fields
+post_data='hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz&file1={{@ -}}&files2={{@ ../../.gitignore}}&files2={{@ package.json}}'
+# -------------
+nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/4-echo-post-data.multipart-form.json" <"$path_abs"
+
+# -------------
+# all "application/x-www-form-urlencoded" fields
+post_data='hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz'
+# -------------
+nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/5-echo-post-data.urlencoded-form.json" <"$path_abs"

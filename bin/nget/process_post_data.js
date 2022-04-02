@@ -11,7 +11,7 @@ const regex = {
   qs: /(?:^|&)([^=]+)=([^&]*)/g
 }
 
-const process_post_data = (POST_data) => {
+const process_post_data = (POST_data, content_type) => {
   if (!POST_data || !(typeof POST_data === 'string')) return null
 
   POST_data = POST_data.replace(regex.b64encode, (match, p1) => btoa(p1))
@@ -41,7 +41,9 @@ const process_post_data = (POST_data) => {
     return placeholder
   })
 
-  if (!files.length)
+  const require_multipart_form_data = (content_type && (typeof content_type === 'string') && (content_type.toLowerCase().indexOf('multipart/form-data') >= 0))
+
+  if (!files.length && !require_multipart_form_data)
     return POST_data
 
   // multipart/form-data

@@ -123,7 +123,7 @@ if (argv_vals["--referer"] || argv_vals["--user-agent"] || argv_vals["--header"]
 }
 
 argv_vals["--post-data"] = (
-     process_post_data(argv_vals["--post-data"])
+     process_post_data(argv_vals["--post-data"], (argv_vals["--headers"] ? argv_vals["--headers"]['content-type'] : null))
   || argv_vals["--post-data"]
   || argv_vals["--post-file"]
   || ""

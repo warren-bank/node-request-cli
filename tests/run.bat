@@ -64,4 +64,8 @@ rem :: -------------
 rem :: all "application/x-www-form-urlencoded" fields
 set post_data="hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz"
 rem :: -------------
-call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\5-echo-post-data.urlencoded-form.json" <"%path_abs%"
+call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\5-echo-post-data.urlencoded-form.json"
+
+rem :: -------------
+rem :: re-POST the previous unmodified form fields using "multipart/form-data" encoding
+call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\6-echo-post-data.multipart-form.json" --header "Content-Type: multipart/form-data"

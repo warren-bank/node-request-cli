@@ -1,6 +1,6 @@
 {
   "name": "@warren-bank/node-request-cli",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "main": "lib/process_cli.js",
   "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies, content-encoding, multipart/form-data.",
   "author": "Warren Bank (https://github.com/warren-bank)",
@@ -23,6 +23,7 @@
     "url": "https://github.com/warren-bank/node-request-cli"
   },
   "keywords": [
+    "request",
     "http request client",
     "http client",
     "http",
@@ -33,7 +34,6 @@
     "cookie jar",
     "cookie",
     "cookies",
-    "promise",
     "content-encoding",
     "compression",
     "compressed",
@@ -41,13 +41,12 @@
     "multipart",
     "form-data",
     "form data",
+    "buffer",
     "stream",
     "pipe",
     "stdin",
     "stdout",
-    "buffer",
     "wget",
-    "curl",
-    "request"
+    "curl"
   ]
 }

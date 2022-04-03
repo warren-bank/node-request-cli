@@ -21,6 +21,7 @@ mkdir "%workspace%\i_now"
 mkdir "%workspace%\cookies"
 mkdir "%workspace%\stream"
 mkdir "%workspace%\multipart_form_data"
+mkdir "%workspace%\pipe"
 
 call nget --help >"help.txt"
 
@@ -58,14 +59,42 @@ rem :: -------------
 rem :: all "multipart/form-data" fields
 set post_data="hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz&file1={{@ -}}&files2={{@ ../../.gitignore}}&files2={{@ package.json}}"
 rem :: -------------
-call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\4-echo-post-data.multipart-form.json" <"%path_abs%"
+call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\4-echo-post-data.multipart-form.txt" <"%path_abs%"
 
 rem :: -------------
 rem :: all "application/x-www-form-urlencoded" fields
 set post_data="hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz"
 rem :: -------------
-call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\5-echo-post-data.urlencoded-form.json"
+call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\5-echo-post-data.urlencoded-form.txt"
 
 rem :: -------------
 rem :: re-POST the previous unmodified form fields using "multipart/form-data" encoding
-call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\6-echo-post-data.multipart-form.json" --header "Content-Type: multipart/form-data"
+call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\multipart_form_data\6-echo-post-data.multipart-form.txt" --header "Content-Type: multipart/form-data"
+
+rem :: -------------
+rem :: pipe: request 1 downloads image, request 2 uploads image to echo server (no filename, default mime)
+set post_data="image={{@ -}}"
+call nget --url "https://avatars.githubusercontent.com/u/6810270" -O "-" | call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\pipe\1-echo-post-data.multipart-form.txt"
+
+rem :: -------------
+rem :: pipe: request 1 downloads image, request 2 uploads image to echo server (explicit filename, default mime)
+set post_data="image={{@ - avatar.png}}"
+call nget --url "https://avatars.githubusercontent.com/u/6810270" -O "-" | call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\pipe\2-echo-post-data.multipart-form.txt"
+
+rem :: -------------
+rem :: pipe: request 1 downloads image, request 2 uploads image to echo server (explicit filename, explicit mime)
+set post_data="image={{@ - avatar.png | image/awesome-png}}"
+call nget --url "https://avatars.githubusercontent.com/u/6810270" -O "-" | call nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data %post_data% -O "%workspace%\pipe\3-echo-post-data.multipart-form.txt"
+
+rem :: -------------
+rem :: query github API for SHA hash of an arbitrary file in a repo
+rem :: https://docs.github.com/en/rest/reference/repos#get-repository-content
+call nget --url "https://api.github.com/repos/warren-bank/Android-WebMonkey/contents/android-studio-project/WebMonkey/src/main/res/drawable/launcher.png" -U "nget" -O "-" | perl -pe "s/^.*\x22content\x22:\x22([^\x22]+)\x22.*$/\1/; s/\\n//g" | openssl sha1 >"%workspace%\pipe\4a-sha1-base64-actual.txt"
+
+rem :: -------------
+rem :: pipe: download same file and generate SHA hash to compare
+call nget --url "https://github.com/warren-bank/Android-WebMonkey/raw/master/android-studio-project/WebMonkey/src/main/res/drawable/launcher.png" -O "-" | openssl base64 -A | openssl sha1 >"%workspace%\pipe\4b-sha1-base64-piped.txt"
+
+rem :: -------------
+rem :: perform bitwise comparison
+fc /b "%workspace%\pipe\4a-sha1-base64-actual.txt" "%workspace%\pipe\4b-sha1-base64-piped.txt" >"%workspace%\pipe\4c-sha1-base64-equality.txt"

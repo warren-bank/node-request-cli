@@ -14,18 +14,45 @@ const regex = {
 const process_post_data = (POST_data, content_type) => {
   if (!POST_data || !(typeof POST_data === 'string')) return null
 
-  POST_data = POST_data.replace(regex.b64encode, (match, p1) => btoa(p1))
-  POST_data = POST_data.replace(regex.b64decode, (match, p1) => atob(p1))
+  POST_data = POST_data.replace(regex.b64encode, (match, p1) => p1 ? btoa(p1) : '')
+  POST_data = POST_data.replace(regex.b64decode, (match, p1) => p1 ? atob(p1) : '')
 
-  POST_data = POST_data.replace(regex.urlencode, (match, p1) => encodeURIComponent(p1))
-  POST_data = POST_data.replace(regex.urldecode, (match, p1) => decodeURIComponent(p1))
+  POST_data = POST_data.replace(regex.urlencode, (match, p1) => p1 ? encodeURIComponent(p1) : '')
+  POST_data = POST_data.replace(regex.urldecode, (match, p1) => p1 ? decodeURIComponent(p1) : '')
 
   const placeholder = '{{xXx---stream---Readable---xXx}}'
   const files = []
 
   POST_data = POST_data.replace(regex.filepath, (match, p1) => {
-    if (p1 === '-') {
-      files.push({file: process.stdin})
+    if (!p1) return ''
+
+    if (p1[0] === '-') {
+      let filename, mime
+
+      if (p1.length > 1) {
+        p1 = p1.substring(1, p1.length)
+
+        // token (chosen arbitrarily) to separate an optional filename from an optional mime-type
+        //   ex: image.png | image/png
+        // in most cases, an explicit mime-type is not necessary; it will be chosen based on the filename extension.
+        const sep = '|'
+        const pos = p1.indexOf(sep)
+
+        if (pos >= 0) {
+          if (pos > 0) {
+            filename = p1.substring(0, pos).trim()
+          }
+
+          if (pos + 1 < p1.length) {
+            mime = p1.substring(pos + 1, p1.length).trim()
+          }
+        }
+        else {
+          filename = p1.trim()
+        }
+      }
+
+      files.push({file: process.stdin, filename, mime})
       return placeholder
     }
 

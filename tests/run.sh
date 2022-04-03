@@ -21,6 +21,7 @@ mkdir "${workspace}/i_now"
 mkdir "${workspace}/cookies"
 mkdir "${workspace}/stream"
 mkdir "${workspace}/multipart_form_data"
+mkdir "${workspace}/pipe"
 
 nget --help >'help.txt'
 
@@ -58,14 +59,42 @@ path_abs="${workspace}/../../.gitignore"
 # all "multipart/form-data" fields
 post_data='hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz&file1={{@ -}}&files2={{@ ../../.gitignore}}&files2={{@ package.json}}'
 # -------------
-nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/4-echo-post-data.multipart-form.json" <"$path_abs"
+nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/4-echo-post-data.multipart-form.txt" <"$path_abs"
 
 # -------------
 # all "application/x-www-form-urlencoded" fields
 post_data='hidden1={{+ Hello, World!}}&select1=Foo&select1=Bar&select1=Baz&radio1=Foo&checkbox1=Foo&checkbox1=Bar&checkbox1=Baz'
 # -------------
-nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/5-echo-post-data.urlencoded-form.json"
+nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/5-echo-post-data.urlencoded-form.txt"
 
 # -------------
 # re-POST the previous unmodified form fields using "multipart/form-data" encoding
-nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/6-echo-post-data.multipart-form.json" --header "Content-Type: multipart/form-data"
+nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/multipart_form_data/6-echo-post-data.multipart-form.txt" --header "Content-Type: multipart/form-data"
+
+# -------------
+# pipe: request 1 downloads image, request 2 uploads image to echo server (no filename, default mime)
+post_data='image={{@ -}}'
+nget --url "https://avatars.githubusercontent.com/u/6810270" -O "-" | nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/pipe/1-echo-post-data.multipart-form.txt"
+
+# -------------
+# pipe: request 1 downloads image, request 2 uploads image to echo server (explicit filename, default mime)
+post_data='image={{@ - avatar.png}}'
+nget --url "https://avatars.githubusercontent.com/u/6810270" -O "-" | nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/pipe/2-echo-post-data.multipart-form.txt"
+
+# -------------
+# pipe: request 1 downloads image, request 2 uploads image to echo server (explicit filename, explicit mime)
+post_data='image={{@ - avatar.png | image/awesome-png}}'
+nget --url "https://avatars.githubusercontent.com/u/6810270" -O "-" | nget --url "http://localhost/cgi-bin/echo-post-data/echo-post-data.pl" --method "POST" --post-data "$post_data" -O "${workspace}/pipe/3-echo-post-data.multipart-form.txt"
+
+# -------------
+# query github API for SHA hash of an arbitrary file in a repo
+# https://docs.github.com/en/rest/reference/repos#get-repository-content
+nget --url "https://api.github.com/repos/warren-bank/Android-WebMonkey/contents/android-studio-project/WebMonkey/src/main/res/drawable/launcher.png" -U "nget" -O "-" | perl -pe 's/^.*\x22content\x22:\x22([^\x22]+)\x22.*$/\1/; s/\\n//g' | openssl sha1 >"${workspace}/pipe/4a-sha1-base64-actual.txt"
+
+# -------------
+# pipe: download same file and generate SHA hash to compare
+nget --url "https://github.com/warren-bank/Android-WebMonkey/raw/master/android-studio-project/WebMonkey/src/main/res/drawable/launcher.png" -O "-" | openssl base64 -A | openssl sha1 >"${workspace}/pipe/4b-sha1-base64-piped.txt"
+
+# -------------
+# perform bitwise comparison
+diff -s "${workspace}/pipe/4a-sha1-base64-actual.txt" "${workspace}/pipe/4b-sha1-base64-piped.txt" >"${workspace}/pipe/4c-sha1-base64-equality.txt"

@@ -11,6 +11,32 @@ const regex = {
   qs: /(?:^|&)([^=]+)=([^&]*)/g
 }
 
+// Use a token to split filepath into 2x components: filepath and content-type.
+// The default token is '|'.
+//   ex: image.png | image/png
+// In most cases, an explicit content-type is not necessary;
+// it will be chosen based on the filename extension.
+const split_filepath = (filepath, sep = '|') => {
+  let filename, mime
+
+  const pos = filepath.indexOf(sep)
+
+  if (pos >= 0) {
+    if (pos > 0) {
+      filename = filepath.substring(0, pos).trim()
+    }
+
+    if ((pos + sep.length) < filepath.length) {
+      mime = filepath.substring((pos + sep.length), filepath.length).trim()
+    }
+  }
+  else {
+    filename = filepath.trim()
+  }
+
+  return {filename, mime}
+}
+
 const process_post_data = (POST_data, content_type) => {
   if (!POST_data || !(typeof POST_data === 'string')) return null
 
@@ -24,48 +50,38 @@ const process_post_data = (POST_data, content_type) => {
   const files = []
 
   POST_data = POST_data.replace(regex.filepath, (match, p1) => {
+    let details
+
     if (!p1) return ''
 
     if (p1[0] === '-') {
-      let filename, mime
+      details = {file: process.stdin}
 
       if (p1.length > 1) {
         p1 = p1.substring(1, p1.length)
 
-        // token (chosen arbitrarily) to separate an optional filename from an optional mime-type
-        //   ex: image.png | image/png
-        // in most cases, an explicit mime-type is not necessary; it will be chosen based on the filename extension.
-        const sep = '|'
-        const pos = p1.indexOf(sep)
-
-        if (pos >= 0) {
-          if (pos > 0) {
-            filename = p1.substring(0, pos).trim()
-          }
-
-          if (pos + 1 < p1.length) {
-            mime = p1.substring(pos + 1, p1.length).trim()
-          }
-        }
-        else {
-          filename = p1.trim()
-        }
+        Object.assign(details, split_filepath(p1))
       }
 
-      files.push({file: process.stdin, filename, mime})
+      files.push(details)
       return placeholder
     }
+    else {
+      details = split_filepath(p1)
 
-    try {
-      p1 = fs.realpathSync(p1)
-    }
-    catch(e) {
-      // file path does not exist
-      return ''
-    }
+      try {
+        if (!details.filename) throw ''
 
-    files.push({filename: p1})
-    return placeholder
+        details.filename = fs.realpathSync(details.filename)
+      }
+      catch(e) {
+        // file path does not exist
+        return ''
+      }
+
+      files.push(details)
+      return placeholder
+    }
   })
 
   const require_multipart_form_data = (content_type && (typeof content_type === 'string') && (content_type.toLowerCase().indexOf('multipart/form-data') >= 0))

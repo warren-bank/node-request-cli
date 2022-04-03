@@ -86,13 +86,11 @@ options:
         "filepath" is the path to a file;
         either absolute or relative to the current working directory.
         The binary content of such files are included in the request.
+        The binary data piped from a filepath can be configured with:
+          "{{@ filepath | mime}}"
         Use "-" to redirect standard input.
         The binary data piped from stdin can be configured with:
           "{{@ - filename | mime}}"
-    Examples:
-      --post-data "text_encoded={{+ value to urlencode}}&text_decoded={{- value%20to%20urldecode}}&binary_stdin={{@ -}}&binary_file={{@ /path/to/file}}"
-      --post-data "image={{@ - image.png}}"
-      --post-data "image={{@ - image.png | image/awesome-png}}"
     When 'content-type: multipart/form-data':
       All form field names  are automatically urlencoded.
       All form field values are automatically urldecoded.

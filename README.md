@@ -109,13 +109,11 @@ options:
         "filepath" is the path to a file;
         either absolute or relative to the current working directory.
         The binary content of such files are included in the request.
+        The binary data piped from a filepath can be configured with:
+          "{{@ filepath | mime}}"
         Use "-" to redirect standard input.
         The binary data piped from stdin can be configured with:
           "{{@ - filename | mime}}"
-    Examples:
-      --post-data "text_encoded={{+ value to urlencode}}&text_decoded={{- value%20to%20urldecode}}&binary_stdin={{@ -}}&binary_file={{@ /path/to/file}}"
-      --post-data "image={{@ - image.png}}"
-      --post-data "image={{@ - image.png | image/awesome-png}}"
     When 'content-type: multipart/form-data':
       All form field names  are automatically urlencoded.
       All form field values are automatically urldecoded.
@@ -230,9 +228,34 @@ options:
     Specify path to output file.
 ```
 
-#### Example:
+#### Examples:
 
-* [this test script](https://github.com/warren-bank/node-request-cli/blob/master/tests/run.sh) is a good introduction
+[This test script](https://github.com/warren-bank/node-request-cli/blob/master/tests/run.sh) is a thorough reference.
+
+The following examples should serve as a quick reference:
+
+```bash
+nget --no-check-certificate -nc --content-disposition \
+  --max-concurrency 10 \
+  -i '/path/to/input-urls.list' \
+  -P '/path/to/output-directory'
+
+nget --url 'http://httpbin.org/post' --method POST \
+  --post-file '/path/to/file1.input' \
+  -O '/path/to/file1.output'
+
+cat '/path/to/file1.input' | \
+nget --url 'http://httpbin.org/post' --method POST \
+  --post-data 'text_encoded={{+ value to urlencode}}&text_decoded={{- value%20to%20urldecode}}&binary_stdin={{@ -}}&binary_file={{@ /path/to/file2.input}}' \
+  -U 'nget' --header 'accept: application/json' \
+  -O '-' >'/path/to/file2.output'
+
+cat '/path/to/file1.input' | \
+nget --url 'http://httpbin.org/post' --method POST \
+  --post-data 'text_encoded={{+ value to urlencode}}&text_decoded={{- value%20to%20urldecode}}&binary_stdin={{@ - file1.input | text/plain}}&binary_file={{@ /path/to/file2.input | text/plain}}' \
+  -U 'nget' --header 'accept: application/json' \
+  -O '-' >'/path/to/file3.output'
+```
 
 #### Usage as an Embedded Library:
 

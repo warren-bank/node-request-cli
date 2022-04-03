@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-workspace="${DIR}/workspace"
+export workspace="${DIR}/workspace"
 
 [ -d "$workspace" ] && rm -rf "$workspace"
 mkdir "$workspace"
@@ -98,3 +98,15 @@ nget --url "https://github.com/warren-bank/Android-WebMonkey/raw/master/android-
 # -------------
 # perform bitwise comparison
 diff -s "${workspace}/pipe/4a-sha1-base64-actual.txt" "${workspace}/pipe/4b-sha1-base64-piped.txt" >"${workspace}/pipe/4c-sha1-base64-equality.txt"
+
+# ------------------
+# request 1:
+req1_url_image='https://avatars.githubusercontent.com/u/6810270'
+# ------------------
+# request 2:
+# [API] https://textart.io/api/img2txt
+req2_api_endpoint='http://api.textart.io/img2txt'
+req2_api_postdata='image={{@ - avatar.png}}&format=color&encode=true'
+# ------------------
+nget --url "$req1_url_image" -O '-' | nget --url "$req2_api_endpoint" --method POST --post-data "$req2_api_postdata" -O '-' >"${workspace}/pipe/5a-ascii_art.json"
+node -e 'let ascii_art = require(process.env.workspace + "/pipe/5a-ascii_art.json"); ascii_art = ascii_art.contents.textart; ascii_art = atob(ascii_art); console.log(ascii_art)' >"${workspace}/pipe/5b-ascii_art.html"

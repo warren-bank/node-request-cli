@@ -98,3 +98,15 @@ call nget --url "https://github.com/warren-bank/Android-WebMonkey/raw/master/and
 rem :: -------------
 rem :: perform bitwise comparison
 fc /b "%workspace%\pipe\4a-sha1-base64-actual.txt" "%workspace%\pipe\4b-sha1-base64-piped.txt" >"%workspace%\pipe\4c-sha1-base64-equality.txt"
+
+rem :: ------------------
+rem :: request 1:
+set req1_url_image="https://avatars.githubusercontent.com/u/6810270"
+rem :: ------------------
+rem :: request 2:
+rem :: [API] https://textart.io/api/img2txt
+set req2_api_endpoint="http://api.textart.io/img2txt"
+set req2_api_postdata="image={{@ - avatar.png}}&format=color&encode=true"
+rem :: ------------------
+nget --url %req1_url_image% -O "-" | nget --url %req2_api_endpoint% --method POST --post-data %req2_api_postdata% -O "-" >"%workspace%\pipe\5a-ascii_art.json"
+node -e "let ascii_art = require(process.env.workspace + '/pipe/5a-ascii_art.json'); ascii_art = ascii_art.contents.textart; ascii_art = atob(ascii_art); console.log(ascii_art)" >"%workspace%\pipe\5b-ascii_art.html"

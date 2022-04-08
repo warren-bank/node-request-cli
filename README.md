@@ -1,6 +1,6 @@
 ### [Nget](https://github.com/warren-bank/node-request-cli)
 
-An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies, content-encoding, multipart/form-data.
+An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies, content-encoding, multipart/form-data, recursive website crawling and mirroring.
 
 #### Installation:
 
@@ -11,23 +11,20 @@ npm install --global @warren-bank/node-request-cli
 #### Summary:
 
 * [request](https://github.com/warren-bank/node-request) implements the HTTP request client as a javascript library
-* [Nget](https://github.com/warren-bank/node-request-cli) provides a command-line interface for this javascript library
-  * CLI options allow the user to access and configure much of its functionality
-  * CLI options follow a naming convention intended to be (somewhat) consistent with `wget`
-    * `wget` has hundreds of CLI options
-    * `nget` has maybe a dozen.. written in one evening
-      * don't expect feature parity
-      * do expect the most important features to be present
-        * pull requests that implement additional `wget` features are always welcome
-          * if the feature involves a fair amount of work, please open an issue so we can discuss before-hand
+* [Nget](https://github.com/warren-bank/node-request-cli) provides a command-line interface with options that:
+  - allow the user to access and configure much of the functionality of the underlying javascript library
+  - follow a naming convention that is intended to be consistent with `wget`
+  - include several aliases that follow a naming convention that is intended to also be consistent (where possible) with `curl`
 
 #### Usage:
 
 ```bash
 nget <options>
 
-options:
-========
+==================
+options (general):
+==================
+
 "-h"
 "--help"
     Print a help message detailing all of Nget's command-line options.
@@ -36,12 +33,12 @@ options:
 "--version"
     Display the version of Nget.
 
-"-u <URL>"
-"--url <URL>"
+"-u" <URL>
+"--url" <URL>
     Specify the URL to download.
 
-"-i <filepath>"
-"--input-file <filepath>"
+"-i" <filepath>
+"--input-file" <filepath>
     Read URLs from a local text file.
     Use "-" to read from standard input.
     Format is one URL per line.
@@ -60,37 +57,48 @@ options:
     Specify the maximum number of URLs to download in parallel.
     The default is 1, which processes the download queue sequentially.
 
-"--headers <filepath>"
+"-w" <integer>
+"--wait" <integer>
+    Specify the number of seconds to wait between requests
+    when "--max-concurrency" is 1.
+
+"--random-wait"
+    Used in combination with "--wait".
+    Converts wait duration to milliseconds,
+    and multiplies by a randomized factor in the range 0.5 to 1.5.
+
+"--headers" <filepath>
     Read request headers from a local text file.
     Use "-" to read from standard input.
     Format is JSON. Data structure is an Object.
     Keys contain header name. Values contain header value.
 
-"--referer <value>"
+"--referer" <URL>
     Specify request header: "Referer: <value>"
     Takes priority over value read by "--headers"
     for the specific header name.
 
-"-U <value>"
-"--user-agent <value>"
+"-U" <value>
+"--user-agent" <value>
     Specify request header: "User-Agent: <value>"
     Takes priority over value read by "--headers"
     for the specific header name.
 
-"--header <name=value>"
-"--header <name:value>"
+"--header" "<name>=<value>"
+"--header" "<name>:<value>"
     Specify request header: "<name>: <value>"
     Takes priority over value read by "--headers"
     for the specific header name.
+    This flag can be repeated to add multiple request headers.
 
-"--method <value>"
+"--method" <value>
     HTTP verb. Value must be one of:
       "GET","HEAD","POST","PUT","DELETE",
       "CONNECT","OPTIONS","TRACE","PATCH"
     The default is "GET", which changes to "POST"
     when "--post-data" or "--post-file" are defined.
 
-"--post-data <data>"
+"--post-data" <data>
     Specifies a string to send as POST data.
     By default, the 'Content-Type' request header will contain:
       'application/x-www-form-urlencoded'
@@ -123,14 +131,14 @@ options:
       for example, PHP requires repeated form fields
       to obey a naming convention that appends the suffix: '[]'.
 
-"--post-file <filepath>"
+"--post-file" <filepath>
     Open as a readable stream. Pipe the binary content to POST data.
     Use "-" to redirect standard input to POST data.
     By default, the 'Content-Type' request header will contain:
       'application/octet-stream'
     This option is nullified by: "--post-data"
 
-"--max-redirect <number>"
+"--max-redirect" <integer>
     Specifies the maximum number of redirections to follow.
     The default is 10.
 
@@ -145,11 +153,11 @@ options:
     for the final request is not 200.
     This option pairs well with: "--no-follow-redirect"
 
-"--load-cookies <filepath>"
+"--load-cookies" <filepath>
     Specifies the text file used to store cookies.
     Format is JSON.
 
-"--load-cookies true"
+"--load-cookies" "true"
     Indicates that cookies should be stored in memory
     for the lifespan of a single Nget session.
 
@@ -157,13 +165,13 @@ options:
     Indicates that cookies must not be used during the current Nget session.
     Takes priority over: "--load-cookies"
 
-"-P <dirpath>"
-"--directory-prefix <dirpath>"
+"-P" <dirpath>
+"--directory-prefix" <dirpath>
     Specifies the directory to which all file downloads will be saved.
     The default is "." (the current directory).
 
-"-O <filepath>"
-"--output-document <filepath>"
+"-O" <filepath>
+"--output-document" <filepath>
     Specifies where output will be written.
     Use "-" to write to standard output.
     Priority when used with a single "--url":
@@ -181,9 +189,62 @@ options:
     Indicates that the output should be saved with a filename
     that is obtained from the 'Content-Disposition' response header.
     The default behavior is to obtain a filename
-    that is obtained from the basename of the requested URL.
+    that is obtained from the basename of the original URL request.
     This option pairs well with: "--directory-prefix"
     This option is nullified by: "--output-document"
+
+"--trust-server-names"
+    Indicates that the output should be saved with a filename
+    that is obtained from the basename of the URL after redirects.
+    The default behavior is to obtain a filename
+    that is obtained from the basename of the original URL request.
+    This option pairs well with: "--directory-prefix"
+    This option is nullified by: "--output-document"
+    When recursively crawling a website:
+      The output directory tree hierarchy is derived from URL paths.
+      This option can result in a very different directory structure.
+
+"-nQ"
+"--no-querystring"
+    Exclude the URL querystring from the filename given to a download.
+    For example:
+      URL      = "http://example.com/image?format=png&size=100"
+      default  = "image@format=png&size=100"
+      filename = "image"
+
+"--restrict-file-names" <value>
+    Specify character set restrictions that apply when naming files.
+    Supported values:
+      "windows"
+          Escapes character sets:
+            1. \|/:?"*<>
+            2. ascii byte range (decimal): 0–31
+            3. ascii byte range (decimal): 128–159
+          Also:
+            1. When the downloaded URL contains a querystring,
+               use '@' character to prefix the query,
+               rather than '?'
+            2. When recursively crawling a website,
+               in directory path components for each host,
+               use '+' character to prefix the port number,
+               rather than ':'
+      "unix"
+          Escapes character sets:
+            1. /
+            2. ascii byte range (decimal): 0–31
+            3. ascii byte range (decimal): 128–159
+      "ascii"
+          Escapes character sets:
+            1. ascii byte range (decimal): 128–255
+      "nocontrol"
+          Modifier to prevent the escaping of character sets:
+            1. ascii byte range (decimal): 0–31
+            2. ascii byte range (decimal): 128–159
+      "lowercase"
+          Modifier to convert all uppercase characters to lowercase.
+      "uppercase"
+          Modifier to convert all lowercase characters to uppercase.
+    This flag can be repeated to combine character set restrictions.
 
 "-nc"
 "--no-clobber"
@@ -192,19 +253,285 @@ options:
     The default behavior is to delete the existing file
     and download the new file in its place.
 
+"-c"
+"--continue"
+    Indicates that a file download should continue
+    when the filepath to which it would be saved already exists.
+    The default behavior is to delete the existing file
+    and download the new file in its place.
+
+"-S"
+"--server-response"
+    Print the HTTP response headers returned by the server to stdout.
+
+"-dr"
+"--dry-run"
+    Do not write to output.
+
 "--save-headers"
     Write the HTTP response headers returned by the server to output.
     This metadata prepends to the normal output, with a LF separator.
 
-"-S"
-"--server-response"
-    Print the headers sent by the HTTP server.
+"--plugins" <filepath>
+    Read hook functions from a local javascript file.
+    Format is a CommonJS module that exports one or more plugins.
+    Supported plugins are:
+      module.exports = {
+        change_filename: (filename) => {
+          // ======
+          // notes:
+          // ======
+          // - the input filename is the basename of a filepath
+          //   to which a downloaded URL may be saved.
+          // - the input filename is influenced by:
+          //     "--content-disposition"
+          //     "--trust-server-names"
+          //     "--no-querystring"
+          //     "--restrict-file-names"
+          // ======
+          // - if a value is returned,
+          //   then it will change the filename used for output.
+          // - the output filename is subject to:
+          //   "--no-clobber"
+          //   "--continue"
+          // ======
+        }
+      }
+
+=======================
+options (curl aliases):
+=======================
+
+"-e" <URL>
+"--referer" <URL>
+
+"-A" <value>
+"--user-agent" <value>
+
+"-H" "<name>: <value>"
+"--header" "<name>: <value>"
+
+"-X" <value>
+"--method" <value>
+
+"-d" <data>
+"--data" <data>
+"--form" <data>
+"--post-data" <data>
+
+"--insecure"
+"--no-check-certificate"
+
+"-o" <filepath>
+"--output" <filepath>
+"--output-document" <filepath>
+
+======================
+options (web crawler):
+======================
+
+"--spider"
+    This option is a convenience aggregate, which is equivalent to:
+        --mirror --server-response --dry-run
+
+"-m"
+"--mirror"
+    This option is a convenience aggregate, which is equivalent to:
+        -r -l 0 --trust-server-names -E -k
+
+"-r"
+"--recursive"
+    Enable recursive website crawling.
+    When recursively crawling a website:
+      1. URLs that match a blacklist are not followed
+      2. URLs that match a whitelist are followed
+      3. When there is a whitelist, non-matching URLs are not followed
+      4. When there is no whitelist, same-host URLs are followed
+    All followed URLs are:
+      1. mirrored to the local file system
+    When the content-type of a followed URL is HTML or CSS:
+      1. the content of the response is inspected for embedded URLs
+      2. all embedded URLs are compared to white/black lists
+      3. all embedded URLs that will be followed
+         are rewritten as relative links to the local file system
+      4. all embedded URLs that will not be followed
+         are rewritten as absolute links to the remote host
+
+"-l" <integer>
+"--level" <integer>
+    Specify the maximum depth for recursion.
+    Depth is counted as the number of "hops" from the original URL.
+    For example:
+      --level 1
+        will conditionally download
+        only the links in the target webpage.
+    Special case:
+      --level 0
+        indicates infinite recursion.
+
+"-p"
+"--page-requisites"
+    When either:
+      1. recursively crawling a website with a finite maximum depth
+      2. downloading a single webpage without recursive crawling,
+         which for the purpose of this discussion can be thought of
+         as equivalent to a recursive crawl
+         with a maximum depth that is truly equal to zero
+    HTML documents that are downloaded at the maximum recursion depth
+    will only contain absolute remote URLs to all page resources;
+    all such page resources require deeper recursion than allowed.
+    The purpose for this option is to allow one extra "hop"
+    for all URLs that don't return HTML content.
+    This option pairs well with: "--force-html"
+    WARNING:
+        This option is not yet implemented.
+
+"-E"
+"--adjust-extension"
+    Force that the filenames used to save HTML content
+    always end with an ".html" extension.
+    This option pairs well with: "--force-html"
+    WARNING:
+      - Unlike Wget, which uses a 2x-pass methodology,
+        Nget only uses a 1x-pass strategy,
+        which requires a deterministic way to identify
+        that a URL will return HTML content.
+      - This restriction does not apply to the actual
+        crawling of webpages; content-type of the server response
+        is used to identify HTML content for this purpose.
+      - This restriction does apply to the determination
+        of filenames, and is especially important with respect
+        to the ability to adjust the extension of filenames.
+      - The reason for this restriction is that the determination
+        of filenames must occur at a lower recursion depth,
+        while the URLs in HTML and CSS documents are identified,
+        and conditionally rewritten as relative links
+        to the local file system.
+
+"-k"
+"--convert-links"
+    Rewrite the URLs in HTML and CSS documents
+    that have been followed and mirrored,
+    as relative links to the local file system.
+    By default, all such URLs are rewritten
+    as absolute links to the remote host.
+
+"-np"
+"--no-parent"
+    Prevent the saving of any output to any directory path
+    that is not a direct descendent of the directory
+    that was used to save the target webpage.
+    This option pairs well with: "--no-host-directories", "--cut-dirs"
+    This option is nullified by: "--no-directories"
+
+"-sD"
+"--span-subdomains"
+    Conditionally follow URLs hosted by any subdomain
+    that shares the same 2x top level domain names
+    as the original URL for the target webpage.
+    For example:
+      URL     = "http://www1.example.com/foo.html"
+      follows = "http://www2.example.com/bar.html"
+    This option pairs well with: "--domains", "--exclude-domains"
+
+"-sH"
+"--span-hosts"
+    Conditionally follow URLs hosted by any domain.
+    This option pairs well with: "--domains", "--exclude-domains"
+    This option pairs well with: "--accept-regex", "--reject-regex"
+    This option is nullified by: "--no-parent"
+      (unless also combined with "--no-directories")
+    WARNING:
+      This option uses a non-standard alias.
+      Wget uses the alias "-H" as an alias for "--span-hosts"
+      Curl uses the alias "-H" as an alias for "--header"
+      The alias is allocated for compatability with Curl,
+      because "--header" is used more frequently.
+
+"-D" <value>
+"--domain" <value>
+"--domains" <value>
+    Whitelist a case-insensitive domain name.
+    When "--span-subdomains" is enabled:
+        Domain names are normalized to only contain the 2x top levels.
+    This option pairs well with: "--span-hosts"
+    This flag can be repeated to whitelist multiple domains.
+
+"-xD" <value>
+"--exclude-domains" <value>
+    Blacklist a case-insensitive domain name.
+    When "--span-subdomains" is enabled:
+        Domain names are normalized to only contain the 2x top levels.
+    This option pairs well with: "--span-hosts"
+    This flag can be repeated to blacklist multiple domains.
+
+"--accept-regex" <regex>
+    Specify a case-insensitive PCRE regex pattern
+    to whitelist absolute URLs.
+    This option pairs well with: "--span-hosts"
+    This flag can be repeated to whitelist multiple URL patterns.
+
+"--reject-regex" <regex>
+    Specify a case-insensitive PCRE regex pattern
+    to blacklist absolute URLs.
+    This option pairs well with: "--span-hosts"
+    This flag can be repeated to blacklist multiple URL patterns.
+
+"-nd"
+"--no-directories"
+    Disable the creation of a directory tree hierarchy.
+    Save all file downloads to a single output directory.
+    By default, crawling produces a directory structure
+    which mirrors that of the remote server.
+    This option pairs well with: "--directory-prefix"
+
+"--protocol-directories"
+    Include top-level subdirectories in the resulting directory tree
+    named for the network protocol with which they were crawled.
+    For example: "http/host/path/file" or "https/host/path/file"
+    This option is nullified by: "--no-directories"
+
+"-nH"
+"--no-host-directories"
+    Exclude top-level subdirectories in the resulting directory tree
+    named for the host from which they were crawled.
+    For example: "path/file"
+    This option is nullified by: "--no-directories"
+
+"--cut-dirs" <integer>
+    Exclude the top n-levels of subdirectories from the URL pathname.
+    For example: --cut-dirs 3
+      URL      = "http://example.com/1/2/3/4/5/index.html"
+      default  = "example.com/1/2/3/4/5/index.html"
+      filepath = "example.com/4/5/index.html"
+    This option is nullified by: "--no-directories"
+
+"--default-page" <value>
+    Specify the filename to save URLs having only a directory path.
+    The default is "index.html".
+
+"-F" <regex>
+"--force-html" <regex>
+    Specify a case-insensitive PCRE regex pattern
+    to match absolute URLs.
+    Matching URLs are:
+      1. inspected for embedded URLs
+      2. given an ".html" file extension by "--adjust-extension"
+    When not configured, a default pattern matches many common cgi.
+    This flag can be repeated to match multiple URL patterns.
+
+"-B" <URL>
+"--base" <URL>
+    Specify a <base href="URL"> that is used only to resolve
+    relative links extracted from the target webpage.
+    More formally, when the depth of recursion is exactly zero.
 ```
 
 ```bash
 nget-convert-cookiefile --json-to-text --in <filepath> --out <filepath>
 nget-convert-cookiefile --text-to-json --in <filepath> --out <filepath>
 
+========
 options:
 ========
 "-h"
@@ -221,10 +548,10 @@ options:
 "--text-to-json"
     Enable the conversion operation: Netscape text format to JSON
 
-"--in <filepath>"
+"--in" <filepath>
     Specify path to input file.
 
-"--out <filepath>"
+"--out" <filepath>
     Specify path to output file.
 ```
 
@@ -255,6 +582,9 @@ nget --url 'http://httpbin.org/post' --method POST \
   --post-data 'text_encoded={{+ value to urlencode}}&text_decoded={{- value%20to%20urldecode}}&binary_stdin={{@ - file1.input | text/plain}}&binary_file={{@ /path/to/file2.input | text/plain}}' \
   -U 'nget' --header 'accept: application/json' \
   -O '-' >'/path/to/file3.output'
+
+nget --mirror --url 'https://hexdocs.pm/crawler/api-reference.html' \
+  -P '/path/to/output-directory'
 ```
 
 #### Usage as an Embedded Library:

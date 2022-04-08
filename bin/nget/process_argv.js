@@ -3,7 +3,11 @@ const process_argv = require('@warren-bank/node-process-argv')
 const path = require('path')
 const fs   = require('fs')
 
-const process_post_data = require('./process_post_data')
+const process_post_data = require('./process_argv/process_post_data')
+
+const curl        = require('./process_argv/curl')
+const web_crawler = require('./process_argv/web_crawler')
+const addons      = [curl, web_crawler]
 
 const argv_flags = {
   "--help":                                 {bool: true},
@@ -12,6 +16,8 @@ const argv_flags = {
   "--url":                                  {},
   "--input-file":                           {file: "lines"},
   "--max-concurrency":                      {num:  "int"},
+  "--wait":                                 {num:  "int"},
+  "--random-wait":                          {bool: true},
 
   "--headers":                              {file: "json"},
   "--referer":                              {},
@@ -23,7 +29,7 @@ const argv_flags = {
   "--post-data":                            {},
   "--post-file":                            {file: "stream"},
 
-  "--max-redirect":                         {num:  true},
+  "--max-redirect":                         {num:  "int"},
 //"--binary":                               {bool: true},
 //"--stream":                               {bool: true},
   "--no-check-certificate":                 {bool: true},
@@ -36,10 +42,17 @@ const argv_flags = {
   "--directory-prefix":                     {},
   "--output-document":                      {},
   "--content-disposition":                  {bool: true},
+  "--trust-server-names":                   {bool: true},
+  "--no-querystring":                       {bool: true},
+  "--restrict-file-names":                  {enum: ["windows","unix","nocontrol","ascii","lowercase","uppercase"], many: true},
   "--no-clobber":                           {bool: true},
+  "--continue":                             {bool: true},
 
+  "--server-response":                      {bool: true},
+  "--dry-run":                              {bool: true},
   "--save-headers":                         {bool: true},
-  "--server-response":                      {bool: true}
+
+  "--plugins":                              {file: "module"}
 }
 
 const argv_flag_aliases = {
@@ -48,11 +61,20 @@ const argv_flag_aliases = {
   "--url":                                  ["-u"],
   "--input-file":                           ["-i"],
   "--max-concurrency":                      ["--mc", "--threads"],
+  "--wait":                                 ["-w"],
   "--user-agent":                           ["-U"],
   "--directory-prefix":                     ["-P"],
   "--output-document":                      ["-O"],
+  "--no-querystring":                       ["-nQ"],
   "--no-clobber":                           ["-nc"],
-  "--server-response":                      ["-S"]
+  "--continue":                             ["-c"],
+  "--server-response":                      ["-S"],
+  "--dry-run":                              ["-dr"]
+}
+
+for (const addon of addons) {
+  addon.add_argv_flags(argv_flags)
+  addon.add_argv_flag_aliases(argv_flag_aliases)
 }
 
 let argv_vals = {}
@@ -179,6 +201,11 @@ if (argv_vals["--directory-prefix"]) {
   }
 }
 
+if (argv_vals["--output-document"] && ((["/dev/null", "nul"]).indexOf(argv_vals["--output-document"].toLowerCase()) >= 0)) {
+  argv_vals["--output-document"] = "-"
+  argv_vals["--dry-run"]         = true
+}
+
 if (argv_vals["--output-document"] && (argv_vals["--output-document"] !== "-")) {
   argv_vals["--output-document"] = path.resolve(argv_vals["--output-document"])
 
@@ -199,6 +226,18 @@ if (argv_vals["--output-document"] && (argv_vals["--output-document"] !== "-")) 
       fs.unlinkSync(argv_vals["--output-document"])
     }
   }
+}
+
+if (!argv_vals["--restrict-file-names"].length) {
+  argv_vals["--restrict-file-names"].push(
+    (process.platform === 'win32')
+      ? 'windows'
+      : 'unix'
+  )
+}
+
+for (const addon of addons) {
+  addon.process_argv_vals(argv_vals)
 }
 
 module.exports = argv_vals

@@ -1,5 +1,8 @@
 @echo off
 
+rem :: enable writing log statements in web crawler to stdout
+set NODE_ENV=development
+
 set DIR=%~dp0.
 set workspace=%DIR%\workspace
 
@@ -22,6 +25,7 @@ mkdir "%workspace%\cookies"
 mkdir "%workspace%\stream"
 mkdir "%workspace%\multipart_form_data"
 mkdir "%workspace%\pipe"
+mkdir "%workspace%\mirror"
 
 call nget --help >"help.txt"
 
@@ -108,5 +112,9 @@ rem :: [API] https://textart.io/api/img2txt
 set req2_api_endpoint="http://api.textart.io/img2txt"
 set req2_api_postdata="image={{@ - avatar.png}}&format=color&encode=true"
 rem :: ------------------
-nget --url %req1_url_image% -O "-" | nget --url %req2_api_endpoint% --method POST --post-data %req2_api_postdata% -O "-" >"%workspace%\pipe\5a-ascii_art.json"
-node -e "let ascii_art = require(process.env.workspace + '/pipe/5a-ascii_art.json'); ascii_art = ascii_art.contents.textart; ascii_art = atob(ascii_art); console.log(ascii_art)" >"%workspace%\pipe\5b-ascii_art.html"
+call nget --url %req1_url_image% -O "-" | call nget --url %req2_api_endpoint% --method POST --post-data %req2_api_postdata% -O "-" >"%workspace%\pipe\5a-ascii_art.json"
+call node -e "let ascii_art = require(process.env.workspace + '/pipe/5a-ascii_art.json'); ascii_art = ascii_art.contents.textart; ascii_art = atob(ascii_art); console.log(ascii_art)" >"%workspace%\pipe\5b-ascii_art.html"
+
+rem :: ------------------
+rem :: mirror a website: (830 KB, 47 files)
+call nget -P "%workspace%\mirror" --mirror --url "https://hexdocs.pm/crawler/api-reference.html" -S >"%workspace%\mirror\hexdocs.pm.log" 2>&1

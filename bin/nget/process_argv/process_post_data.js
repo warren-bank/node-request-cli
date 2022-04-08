@@ -11,6 +11,13 @@ const regex = {
   qs: /(?:^|&)([^=]+)=([^&]*)/g
 }
 
+const reset_global_regex = (r) => {
+  if (r instanceof RegExp) {
+    r.lastIndex = 0
+  }
+  return r
+}
+
 // Use a token to split filepath into 2x components: filepath and content-type.
 // The default token is '|'.
 //   ex: image.png | image/png
@@ -40,16 +47,16 @@ const split_filepath = (filepath, sep = '|') => {
 const process_post_data = (POST_data, content_type) => {
   if (!POST_data || !(typeof POST_data === 'string')) return null
 
-  POST_data = POST_data.replace(regex.b64encode, (match, p1) => p1 ? btoa(p1) : '')
-  POST_data = POST_data.replace(regex.b64decode, (match, p1) => p1 ? atob(p1) : '')
+  POST_data = POST_data.replace(reset_global_regex(regex.b64encode), (match, p1) => p1 ? btoa(p1) : '')
+  POST_data = POST_data.replace(reset_global_regex(regex.b64decode), (match, p1) => p1 ? atob(p1) : '')
 
-  POST_data = POST_data.replace(regex.urlencode, (match, p1) => p1 ? encodeURIComponent(p1) : '')
-  POST_data = POST_data.replace(regex.urldecode, (match, p1) => p1 ? decodeURIComponent(p1) : '')
+  POST_data = POST_data.replace(reset_global_regex(regex.urlencode), (match, p1) => p1 ? encodeURIComponent(p1) : '')
+  POST_data = POST_data.replace(reset_global_regex(regex.urldecode), (match, p1) => p1 ? decodeURIComponent(p1) : '')
 
   const placeholder = '{{xXx---stream---Readable---xXx}}'
   const files = []
 
-  POST_data = POST_data.replace(regex.filepath, (match, p1) => {
+  POST_data = POST_data.replace(reset_global_regex(regex.filepath), (match, p1) => {
     let details
 
     if (!p1) return ''
@@ -93,6 +100,7 @@ const process_post_data = (POST_data, content_type) => {
   const fields = []
   let matches, field_name, field_value
 
+  reset_global_regex(regex.qs)
   while (matches = regex.qs.exec(POST_data)) {
     field_name  = matches[1]
     field_value = matches[2]

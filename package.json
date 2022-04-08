@@ -1,8 +1,8 @@
 {
   "name": "@warren-bank/node-request-cli",
-  "version": "3.3.4",
+  "version": "4.0.0",
   "main": "lib/process_cli.js",
-  "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies, content-encoding, multipart/form-data.",
+  "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, redirects, cookies, content-encoding, multipart/form-data, recursive website crawling and mirroring.",
   "author": "Warren Bank (https://github.com/warren-bank)",
   "license": "GPL-2.0",
   "bin": {
@@ -47,6 +47,14 @@
     "stdin",
     "stdout",
     "wget",
-    "curl"
+    "curl",
+    "web spider",
+    "web crawler",
+    "website mirror",
+    "website downloader",
+    "spider",
+    "crawler",
+    "mirror",
+    "downloader"
   ]
 }

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# enable writing log statements in web crawler to stdout
+export NODE_ENV='development'
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export workspace="${DIR}/workspace"
 
@@ -110,3 +113,7 @@ req2_api_postdata='image={{@ - avatar.png}}&format=color&encode=true'
 # ------------------
 nget --url "$req1_url_image" -O '-' | nget --url "$req2_api_endpoint" --method POST --post-data "$req2_api_postdata" -O '-' >"${workspace}/pipe/5a-ascii_art.json"
 node -e 'let ascii_art = require(process.env.workspace + "/pipe/5a-ascii_art.json"); ascii_art = ascii_art.contents.textart; ascii_art = atob(ascii_art); console.log(ascii_art)' >"${workspace}/pipe/5b-ascii_art.html"
+
+# ------------------
+# mirror a website: (830 KB, 47 files)
+nget -P "${workspace}/mirror" --mirror --url "https://hexdocs.pm/crawler/api-reference.html" -S >"${workspace}/mirror/hexdocs.pm.log" 2>&1

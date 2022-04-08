@@ -4,6 +4,7 @@ usage:
 nget-convert-cookiefile --json-to-text --in <filepath> --out <filepath>
 nget-convert-cookiefile --text-to-json --in <filepath> --out <filepath>
 
+========
 options:
 ========
 "-h"
@@ -20,10 +21,10 @@ options:
 "--text-to-json"
     Enable the conversion operation: Netscape text format to JSON
 
-"--in <filepath>"
+"--in" <filepath>
     Specify path to input file.
 
-"--out <filepath>"
+"--out" <filepath>
     Specify path to output file.
 `
 

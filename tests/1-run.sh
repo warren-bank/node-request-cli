@@ -116,4 +116,4 @@ node -e 'let ascii_art = require(process.env.workspace + "/pipe/5a-ascii_art.jso
 
 # ------------------
 # mirror a website: (830 KB, 47 files)
-nget -P "${workspace}/mirror" --mirror --url "https://hexdocs.pm/crawler/api-reference.html" -S >"${workspace}/mirror/hexdocs.pm.log" 2>&1
+nget -P "${workspace}/mirror" --mirror --url "https://hexdocs.pm/crawler/1.1.2/api-reference.html" -np -S >"${workspace}/mirror/hexdocs.pm.log" 2>&1

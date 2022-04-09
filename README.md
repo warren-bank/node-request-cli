@@ -582,7 +582,7 @@ nget --url 'http://httpbin.org/post' --method POST \
   -U 'nget' --header 'accept: application/json' \
   -O '-' >'/path/to/file3.output'
 
-nget --mirror --url 'https://hexdocs.pm/crawler/api-reference.html' \
+nget --mirror --url 'https://hexdocs.pm/crawler/1.1.2/api-reference.html' --no-parent \
   -P '/path/to/output-directory'
 ```
 

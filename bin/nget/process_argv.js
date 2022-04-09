@@ -40,6 +40,7 @@ const argv_flags = {
   "--no-cookies":                           {bool: true},
 
   "--directory-prefix":                     {},
+  "--default-page":                         {},
   "--output-document":                      {},
   "--content-disposition":                  {bool: true},
   "--trust-server-names":                   {bool: true},

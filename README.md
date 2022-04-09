@@ -170,6 +170,10 @@ options (general):
     Specifies the directory to which all file downloads will be saved.
     The default is "." (the current directory).
 
+"--default-page" <value>
+    Specify the filename to save URLs having only a directory path.
+    The default is "index.html".
+
 "-O" <filepath>
 "--output-document" <filepath>
     Specifies where output will be written.
@@ -504,10 +508,6 @@ options (web crawler):
       default  = "example.com/1/2/3/4/5/index.html"
       filepath = "example.com/4/5/index.html"
     This option is nullified by: "--no-directories"
-
-"--default-page" <value>
-    Specify the filename to save URLs having only a directory path.
-    The default is "index.html".
 
 "-F" <regex>
 "--force-html" <regex>

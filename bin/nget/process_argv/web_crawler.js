@@ -21,7 +21,6 @@ const add_argv_flags = (argv_flags) => {
       "--protocol-directories":  {bool: true},
       "--no-host-directories":   {bool: true},
       "--cut-dirs":              {num: "int"},
-      "--default-page":          {},
 
       "--force-html":            {regex: "i", many: true},
       "--base":                  {}

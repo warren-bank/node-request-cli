@@ -25,6 +25,11 @@ mkdir "${workspace}/cookies"
 mkdir "${workspace}/stream"
 mkdir "${workspace}/multipart_form_data"
 mkdir "${workspace}/pipe"
+mkdir "${workspace}/mirror"
+mkdir "${workspace}/mirror-wait"
+mkdir "${workspace}/mirror-redirect-paths"
+mkdir "${workspace}/mirror-original-paths"
+mkdir "${workspace}/content-disposition"
 
 nget --help >'help.txt'
 
@@ -117,3 +122,36 @@ node -e 'let ascii_art = require(process.env.workspace + "/pipe/5a-ascii_art.jso
 # ------------------
 # mirror a website: (830 KB, 47 files)
 nget -P "${workspace}/mirror" --mirror --url "https://hexdocs.pm/crawler/1.1.2/api-reference.html" -np -S >"${workspace}/mirror/hexdocs.pm.log" 2>&1
+
+# ------------------
+# mirror a website: (830 KB, 47 files)
+# wait a random duration within the range of 2.5 to 7.5 seconds between each file download during the crawl
+nget -P "${workspace}/mirror-wait" --wait 5 --random-wait --mirror --url "https://hexdocs.pm/crawler/1.1.2/api-reference.html" -np -S >"${workspace}/mirror-wait/hexdocs.pm.log" 2>&1
+
+# ------------------
+# using:
+#   https://github.com/warren-bank/node-serve/blob/130002.18.2/.etc/test/www/cgi-bin/hello-world/hello-world.php
+#   https://github.com/warren-bank/node-serve/blob/130002.18.2/.etc/bin/http/httpd.json#L114
+#   https://github.com/warren-bank/node-serve/blob/130002.18.2/.etc/bin/http/httpd.json#L23
+#   https://github.com/warren-bank/node-serve/blob/130002.18.2/.etc/bin/http/httpd.json#L253
+
+# ------------------
+# mirror a single webpage w/o any links.
+# its URL follows 1x redirect.
+# the filepath written to disk uses pathname after redirect.
+nget -P "${workspace}/mirror-redirect-paths" --mirror --url "http://localhost/IGNORE_EXPLICIT/cgi-bin/hello-world/hello-world.php" --save-headers -S >"${workspace}/mirror-redirect-paths/log.txt" 2>&1
+
+# ------------------
+# mirror a single webpage w/o any links.
+# its URL follows 1x redirect.
+# the filepath written to disk uses pathname before redirect.
+nget -P "${workspace}/mirror-original-paths" -r -l 0 -E -k --url "http://localhost/IGNORE_EXPLICIT/cgi-bin/hello-world/hello-world.php" --save-headers -S >"${workspace}/mirror-original-paths/log.txt" 2>&1
+
+# ------------------
+# using:
+#   http://test.greenbytes.de/tech/tc2231/#attwithutf8fnplain
+
+# ------------------
+# download a single file with a content-disposition header.
+# the suggested filename contains restricted characters that need to be escaped.
+nget -P "${workspace}/content-disposition" --content-disposition --restrict-file-names "windows" --restrict-file-names "ascii" --url "http://test.greenbytes.de/tech/tc2231/attwithutf8fnplain.asis" --save-headers -S >"${workspace}/content-disposition/log.txt" 2>&1

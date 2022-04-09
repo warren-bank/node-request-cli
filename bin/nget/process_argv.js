@@ -221,8 +221,7 @@ if (argv_vals["--output-document"] && (argv_vals["--output-document"] !== "-")) 
       console.log('ERROR: Output file already exists')
       process.exit(0)
     }
-    else {
-      // "--continue" is not supported
+    if (!argv_vals["--continue"]) {
       fs.unlinkSync(argv_vals["--output-document"])
     }
   }

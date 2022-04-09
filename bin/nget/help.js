@@ -414,7 +414,6 @@ options (web crawler):
     For example:
       URL     = "http://www1.example.com/foo.html"
       follows = "http://www2.example.com/bar.html"
-    This option pairs well with: "--domains", "--exclude-domains"
 
 "-sH"
 "--span-hosts"

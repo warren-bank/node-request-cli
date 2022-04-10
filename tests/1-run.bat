@@ -30,6 +30,8 @@ if not exist "%workspace%" (
   mkdir "%workspace%\mirror-redirect-paths"
   mkdir "%workspace%\mirror-original-paths"
   mkdir "%workspace%\content-disposition"
+  mkdir "%workspace%\page-requisites-1-same-host"
+  mkdir "%workspace%\page-requisites-2-all-hosts"
 ) else (
   cd "%workspace%"
 )
@@ -250,3 +252,15 @@ rem :: ------------------
 rem :: download a single file with a content-disposition header.
 rem :: the suggested filename contains restricted characters that need to be escaped.
 call nget -P "%workspace%\content-disposition" --content-disposition --restrict-file-names "windows" --restrict-file-names "ascii" --url "http://test.greenbytes.de/tech/tc2231/attwithutf8fnplain.asis" --save-headers -S >"%workspace%\content-disposition\log.txt" 2>&1
+
+rem :: ------------------
+echo ----- [page-requisites-1-same-host] ----------------------------------
+rem :: ------------------
+rem :: download a single webpage with all of its assets (ie: non-html links) from the same host
+call nget -P "%workspace%\page-requisites-1-same-host" --page-requisites --url "https://hexdocs.pm/crawler/1.1.2/readme.html" -S >"%workspace%\page-requisites-1-same-host\hexdocs.pm.log" 2>&1
+
+rem :: ------------------
+echo ----- [page-requisites-2-all-hosts] ----------------------------------
+rem :: ------------------
+rem :: download a single webpage with all of its assets (ie: non-html links) from all hosts
+call nget -P "%workspace%\page-requisites-2-all-hosts" -sH --page-requisites --url "https://hexdocs.pm/crawler/1.1.2/readme.html" -S >"%workspace%\page-requisites-2-all-hosts\hexdocs.pm.log" 2>&1

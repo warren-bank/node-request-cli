@@ -47,3 +47,5 @@ found 0 vulnerabilities
 ----- [mirror-redirect-paths] ----------------------------------------
 ----- [mirror-original-paths] ----------------------------------------
 ----- [content-disposition] ------------------------------------------
+----- [page-requisites-1-same-host] ----------------------------------
+----- [page-requisites-2-all-hosts] ----------------------------------

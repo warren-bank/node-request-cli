@@ -371,6 +371,7 @@ options (web crawler):
 "--level" <integer>
     Specify the maximum depth for recursion.
     Depth is counted as the number of "hops" from the original URL.
+    The default is 5, which is consistent with Wget.
     For example:
       --level 1
         will conditionally download
@@ -393,8 +394,6 @@ options (web crawler):
     The purpose for this option is to allow one extra "hop"
     for all URLs that don't return HTML content.
     This option pairs well with: "--force-html"
-    WARNING:
-        This option is not yet implemented.
 
 "-E"
 "--adjust-extension"

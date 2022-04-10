@@ -79,6 +79,12 @@ const process_argv_vals = (argv_vals) => {
     }
   }
 
+  if (!argv_vals["--recursive"] && argv_vals["--page-requisites"]) {
+    argv_vals["--recursive"]       = true
+    argv_vals["--level"]           = -1
+    argv_vals["--convert-links"]   = true
+  }
+
   if (argv_vals["--recursive"]) {
     argv_vals["--max-concurrency"] = 1
     argv_vals["--output-document"] = null
@@ -90,13 +96,16 @@ const process_argv_vals = (argv_vals) => {
     if (argv_vals["--level"] === 0) {
       argv_vals["--level"] = Number.MAX_SAFE_INTEGER
     }
+    if (argv_vals["--level"] < 0) {
+      argv_vals["--level"] = 0
+    }
 
     argv_vals["--exclude-host"] = normalize_hosts_list(argv_vals, argv_vals["--exclude-host"])
     argv_vals["--include-host"] = normalize_hosts_list(argv_vals, argv_vals["--include-host"])
 
     if (!argv_vals["--force-html"].length) {
       argv_vals["--force-html"].push(
-        /^[^\?#]+\.(?:cgi|pl|php[3-5]?|py|asp[x]?|[psx]?html?)(?:[\?#].*)?$/i
+        /^[^\?#]+(?:\.(?:cgi|pl|php[3-5]?|py|asp[x]?|[psx]?html?)|\/)(?:[\?#].*)?$/i
       )
     }
   }

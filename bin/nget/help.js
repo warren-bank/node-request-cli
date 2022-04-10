@@ -56,7 +56,7 @@ options (general):
     Keys contain header name. Values contain header value.
 
 "--referer" <URL>
-    Specify request header: "Referer: <value>"
+    Specify request header: "Referer: <URL>"
     Takes priority over value read by "--headers"
     for the specific header name.
 
@@ -204,8 +204,8 @@ options (general):
       "windows"
           Escapes character sets:
             1. \|/:?"*<>
-            2. ascii byte range (decimal): 0–31
-            3. ascii byte range (decimal): 128–159
+            2. ascii byte range (decimal): 0-31
+            3. ascii byte range (decimal): 128-159
           Also:
             1. When the downloaded URL contains a querystring,
                use '@' character to prefix the query,
@@ -217,15 +217,15 @@ options (general):
       "unix"
           Escapes character sets:
             1. /
-            2. ascii byte range (decimal): 0–31
-            3. ascii byte range (decimal): 128–159
+            2. ascii byte range (decimal): 0-31
+            3. ascii byte range (decimal): 128-159
       "ascii"
           Escapes character sets:
-            1. ascii byte range (decimal): 128–255
+            1. ascii byte range (decimal): 128-255
       "nocontrol"
           Modifier to prevent the escaping of character sets:
-            1. ascii byte range (decimal): 0–31
-            2. ascii byte range (decimal): 128–159
+            1. ascii byte range (decimal): 0-31
+            2. ascii byte range (decimal): 128-159
       "lowercase"
           Modifier to convert all uppercase characters to lowercase.
       "uppercase"

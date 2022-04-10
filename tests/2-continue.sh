@@ -12,6 +12,8 @@ if [ ! -d "$workspace" ];then
   clear
 
   mkdir "${workspace}/continue"
+else
+  cd "$workspace"
 fi
 
 PATH="${workspace}/node_modules/.bin:${PATH}"

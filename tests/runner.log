@@ -1,0 +1,49 @@
+Wrote to .\workspace\package.json:
+
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
+added 1 package, and audited 3 packages in 2s
+
+found 0 vulnerabilities
+
+----- [i_old] --------------------------------------------------------
+----- [i_new] --------------------------------------------------------
+----- [i_now] --------------------------------------------------------
+----- [cookies/1-set] ------------------------------------------------
+----- [cookies/2-get] ------------------------------------------------
+----- [cookies/cookie.convert-1] -------------------------------------
+----- [cookies/cookie.convert-2] -------------------------------------
+----- [stream/1] -----------------------------------------------------
+----- [stream/2] -----------------------------------------------------
+----- [stream/3] -----------------------------------------------------
+----- [multipart_form_data/1-post-data] ------------------------------
+----- [multipart_form_data/2-post-data] ------------------------------
+----- [multipart_form_data/3-post-data] ------------------------------
+----- [multipart_form_data/4-echo-post-data.multipart-form] ----------
+----- [multipart_form_data/5-echo-post-data.urlencoded-form] ---------
+----- [multipart_form_data/6-echo-post-data.multipart-form] ----------
+----- [pipe/1-echo-post-data.multipart-form] -------------------------
+----- [pipe/2-echo-post-data.multipart-form] -------------------------
+----- [pipe/3-echo-post-data.multipart-form] -------------------------
+----- [pipe/4a-sha1-base64-actual] -----------------------------------
+----- [pipe/4b-sha1-base64-piped] ------------------------------------
+----- [pipe/4c-sha1-base64-equality] ---------------------------------
+----- [pipe/5a-ascii_art] --------------------------------------------
+----- [pipe/5b-ascii_art] --------------------------------------------
+----- [mirror/hexdocs.pm] --------------------------------------------
+----- [mirror-misc-1/hexdocs.pm] -------------------------------------
+----- [mirror-wait/hexdocs.pm] ---------------------------------------
+----- [mirror-redirect-paths] ----------------------------------------
+----- [mirror-original-paths] ----------------------------------------
+----- [content-disposition] ------------------------------------------

@@ -10,12 +10,14 @@ const add_argv_flags = (argv_flags) => {
       "--adjust-extension":      {bool: true},
       "--convert-links":         {bool: true},
       "--no-parent":             {bool: true},
+      "--exclude-directory":     {many: true},
+      "--include-directory":     {many: true},
       "--span-subdomains":       {bool: true},
       "--span-hosts":            {bool: true},
-      "--domains":               {many: true},
-      "--exclude-domains":       {many: true},
-      "--accept-regex":          {regex: "i", many: true},
+      "--exclude-host":          {many: true},
+      "--include-host":          {many: true},
       "--reject-regex":          {regex: "i", many: true},
+      "--accept-regex":          {regex: "i", many: true},
 
       "--no-directories":        {bool: true},
       "--protocol-directories":  {bool: true},
@@ -39,10 +41,12 @@ const add_argv_flag_aliases = (argv_flag_aliases) => {
       "--adjust-extension":      ["-E"],
       "--convert-links":         ["-k"],
       "--no-parent":             ["-np"],
+      "--exclude-directory":     ["-xD", "--exclude"],               // non-standard: "-X" is allocated to "curl" addon, as an alias for "--method"
+      "--include-directory":     ["-iD", "--include", "-I"],
       "--span-subdomains":       ["-sD"],
-      "--span-hosts":            ["-sH"],  // non-standard: "-H" is allocated to "curl" addon, as an alias for "--header"
-      "--domains":               ["--domain", "-D"],
-      "--exclude-domains":       ["-xD"],
+      "--span-hosts":            ["-sH"],                            // non-standard: "-H" is allocated to "curl" addon, as an alias for "--header"
+      "--exclude-host":          ["-xH", "--exclude-domains"],
+      "--include-host":          ["-iH", "--domains", "-D"],
 
       "--no-directories":        ["-nd"],
       "--no-host-directories":   ["-nH"],
@@ -87,12 +91,8 @@ const process_argv_vals = (argv_vals) => {
       argv_vals["--level"] = Number.MAX_SAFE_INTEGER
     }
 
-    argv_vals["--domains"]         = normalize_domain_list(argv_vals["--domains"])
-    argv_vals["--exclude-domains"] = normalize_domain_list(argv_vals["--exclude-domains"])
-
-    if (argv_vals["--no-directories"]) {
-      argv_vals["--no-parent"] = true
-    }
+    argv_vals["--exclude-host"] = normalize_hosts_list(argv_vals, argv_vals["--exclude-host"])
+    argv_vals["--include-host"] = normalize_hosts_list(argv_vals, argv_vals["--include-host"])
 
     if (!argv_vals["--force-html"].length) {
       argv_vals["--force-html"].push(
@@ -102,26 +102,37 @@ const process_argv_vals = (argv_vals) => {
   }
 }
 
-const normalize_domain_list = (domains) => {
-  if (Array.isArray(domains) && domains.length) {
-    domains = domains.filter(hostname => !!hostname)
-    domains = domains.map(hostname => {
-      hostname = hostname.split('.')
-      if (hostname.length > 2) {
-        hostname = hostname.slice(hostname.length - 2, hostname.length)
-      }
-      hostname = hostname.join('.').toLowerCase()
-      return hostname
-    })
-    return domains
+const normalize_hosts_list = (argv_vals, hosts) => {
+  if (Array.isArray(hosts) && hosts.length) {
+    hosts = hosts.map(hostname => normalize_hostname(argv_vals, hostname))
+    hosts = hosts.filter(hostname => !!hostname)
+    return hosts
   }
   else {
     return []
   }
 }
 
+const normalize_hostname = (argv_vals, hostname) => {
+  if (hostname && (typeof hostname === 'string')) {
+    hostname = hostname.toLowerCase()
+
+    if (argv_vals["--span-subdomains"]) {
+      // normalize hostname to only contain the top 2x levels of the domain
+      hostname = hostname.split('.')
+      if (hostname.length > 2) {
+        hostname = hostname.slice(hostname.length - 2, hostname.length)
+      }
+      hostname = hostname.join('.')
+    }
+    return hostname
+  }
+  return ''
+}
+
 module.exports = {
   add_argv_flags,
   add_argv_flag_aliases,
-  process_argv_vals
+  process_argv_vals,
+  normalize_hostname
 }

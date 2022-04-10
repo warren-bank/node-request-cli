@@ -10,6 +10,7 @@ if not exist "%workspace%" (
   call npm init -y
   call npm install --save "%DIR%\.."
   cls
+  pause
 
   mkdir "%workspace%\continue"
 ) else (

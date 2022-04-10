@@ -268,7 +268,7 @@ options (general):
           // notes:
           // ======
           // - the input filename is the basename of a filepath
-          //   to which a downloaded URL may conditionally be saved.
+          //   to which a downloaded URL may be saved.
           // - the input filename is influenced by:
           //     "--content-disposition"
           //     "--trust-server-names"
@@ -404,11 +404,28 @@ options (web crawler):
 
 "-np"
 "--no-parent"
-    Prevent the saving of any output to any directory path
-    that is not a direct descendent of the directory
-    that was used to save the target webpage.
+    Blacklist all requests with a pathname that does not descend
+    from the absolute directory path in the original URL pathname.
+    This rule only applies to URLs requested from the same host.
+    This option pairs well with: "--span-subdomains"
     This option pairs well with: "--no-host-directories", "--cut-dirs"
-    This option is nullified by: "--no-directories"
+
+"-xD" <value>
+"--exclude" <value>
+"--exclude-directory" <value>
+    Blacklist an absolute directory path that applies only to the host
+    associated with the original URL for the target webpage.
+    No URLs that are a descendant of this directory are followed.
+    This flag can be repeated to blacklist multiple directory paths.
+
+"-iD" <value>
+"-I" <value>
+"--include" <value>
+"--include-directory" <value>
+    Whitelist an absolute directory path that applies only to the host
+    associated with the original URL for the target webpage.
+    All URLs that are a descendant of this directory are followed.
+    This flag can be repeated to whitelist multiple directory paths.
 
 "-sD"
 "--span-subdomains"
@@ -422,10 +439,8 @@ options (web crawler):
 "-sH"
 "--span-hosts"
     Conditionally follow URLs hosted by any domain.
-    This option pairs well with: "--domains", "--exclude-domains"
+    This option pairs well with: "--include-host", "--exclude-host"
     This option pairs well with: "--accept-regex", "--reject-regex"
-    This option is nullified by: "--no-parent"
-      (unless also combined with "--no-directories")
     WARNING:
       This option uses a non-standard alias.
       Wget uses the alias "-H" as an alias for "--span-hosts"
@@ -433,34 +448,36 @@ options (web crawler):
       The alias is allocated for compatability with Curl,
       because "--header" is used more frequently.
 
-"-D" <value>
-"--domain" <value>
-"--domains" <value>
-    Whitelist a case-insensitive domain name.
-    When "--span-subdomains" is enabled:
-        Domain names are normalized to only contain the 2x top levels.
-    This option pairs well with: "--span-hosts"
-    This flag can be repeated to whitelist multiple domains.
-
-"-xD" <value>
+"-xH" <value>
 "--exclude-domains" <value>
-    Blacklist a case-insensitive domain name.
+"--exclude-host" <value>
+    Blacklist a case-insensitive host name.
     When "--span-subdomains" is enabled:
-        Domain names are normalized to only contain the 2x top levels.
+        Host names are normalized to only contain the 2x top domains.
     This option pairs well with: "--span-hosts"
-    This flag can be repeated to blacklist multiple domains.
+    This flag can be repeated to blacklist multiple hosts.
 
-"--accept-regex" <regex>
-    Specify a case-insensitive PCRE regex pattern
-    to whitelist absolute URLs.
+"-iH" <value>
+"-D" <value>
+"--domains" <value>
+"--include-host" <value>
+    Whitelist a case-insensitive host name.
+    When "--span-subdomains" is enabled:
+        Host names are normalized to only contain the 2x top domains.
     This option pairs well with: "--span-hosts"
-    This flag can be repeated to whitelist multiple URL patterns.
+    This flag can be repeated to whitelist multiple hosts.
 
 "--reject-regex" <regex>
     Specify a case-insensitive PCRE regex pattern
     to blacklist absolute URLs.
     This option pairs well with: "--span-hosts"
     This flag can be repeated to blacklist multiple URL patterns.
+
+"--accept-regex" <regex>
+    Specify a case-insensitive PCRE regex pattern
+    to whitelist absolute URLs.
+    This option pairs well with: "--span-hosts"
+    This flag can be repeated to whitelist multiple URL patterns.
 
 "-nd"
 "--no-directories"

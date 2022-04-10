@@ -1,14 +1,27 @@
 const add_argv_flags = (argv_flags) => {
+  Object.assign(
+    argv_flags,
+    {
+      "--head":                  {bool: true}
+    }
+  )
 }
 
 const add_argv_flag_aliases = (argv_flag_aliases) => {
+  Object.assign(
+    argv_flag_aliases,
+    {
+      "--head":                  ["-I"]
+    }
+  )
+
   merge_argv_flag_aliases(
     argv_flag_aliases,
     {
       "--referer":               ["-e"],
       "--user-agent":            ["-A"],
       "--header":                ["-H"],
-      "--method":                ["-X"],
+      "--method":                ["--request", "-X"],
       "--post-data":             ["--form", "--data", "-d"],
       "--no-check-certificate":  ["--insecure"],
       "--output-document":       ["--output", "-o"]
@@ -30,6 +43,13 @@ const merge_argv_flag_aliases = (old_aliases, new_aliases) => {
 }
 
 const process_argv_vals = (argv_vals) => {
+  if (argv_vals["--head"]) {
+    // --method HEAD --server-response --dry-run
+
+    argv_vals["--method"]             = 'HEAD'
+    argv_vals["--server-response"]    = true
+    argv_vals["--dry-run"]            = true
+  }
 }
 
 module.exports = {

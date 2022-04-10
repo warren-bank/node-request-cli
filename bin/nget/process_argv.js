@@ -236,6 +236,12 @@ if (!argv_vals["--restrict-file-names"].length) {
   )
 }
 
+if (argv_vals["--head"]) {
+  argv_vals["--spider"]    = false
+  argv_vals["--mirror"]    = false
+  argv_vals["--recursive"] = false
+}
+
 for (const addon of addons) {
   addon.process_argv_vals(argv_vals)
 }

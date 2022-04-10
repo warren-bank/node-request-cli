@@ -42,7 +42,7 @@ const add_argv_flag_aliases = (argv_flag_aliases) => {
       "--convert-links":         ["-k"],
       "--no-parent":             ["-np"],
       "--exclude-directory":     ["-xD", "--exclude"],               // non-standard: "-X" is allocated to "curl" addon, as an alias for "--method"
-      "--include-directory":     ["-iD", "--include", "-I"],
+      "--include-directory":     ["-iD", "--include"],               // non-standard: "-I" is allocated to "curl" addon, as an alias for "--head"
       "--span-subdomains":       ["-sD"],
       "--span-hosts":            ["-sH"],                            // non-standard: "-H" is allocated to "curl" addon, as an alias for "--header"
       "--exclude-host":          ["-xH", "--exclude-domains"],

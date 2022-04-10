@@ -306,6 +306,11 @@ options (general):
 options (curl aliases):
 =======================
 
+"-I"
+"--head"
+    This option is a convenience aggregate, which is equivalent to:
+        --method HEAD --server-response --dry-run
+
 "-e" <URL>
 "--referer" <URL>
 
@@ -316,6 +321,7 @@ options (curl aliases):
 "--header" "<name>: <value>"
 
 "-X" <value>
+"--request" <value>
 "--method" <value>
 
 "-d" <data>
@@ -435,15 +441,26 @@ options (web crawler):
     associated with the original URL for the target webpage.
     No URLs that are a descendant of this directory are followed.
     This flag can be repeated to blacklist multiple directory paths.
+    WARNING:
+      This option uses a non-standard alias.
+      Wget uses the alias "-X" as an alias for "--exclude"
+      Curl uses the alias "-X" as an alias for "--method"
+      The alias is allocated for compatability with Curl,
+      because "--method" is used more frequently.
 
 "-iD" <value>
-"-I" <value>
 "--include" <value>
 "--include-directory" <value>
     Whitelist an absolute directory path that applies only to the host
     associated with the original URL for the target webpage.
     All URLs that are a descendant of this directory are followed.
     This flag can be repeated to whitelist multiple directory paths.
+    WARNING:
+      This option uses a non-standard alias.
+      Wget uses the alias "-I" as an alias for "--include"
+      Curl uses the alias "-I" as an alias for "--head"
+      The alias is allocated for compatability with Curl,
+      because "--head" is used more frequently.
 
 "-sD"
 "--span-subdomains"
@@ -573,7 +590,7 @@ options:
 
 #### Examples:
 
-[This test script](https://github.com/warren-bank/node-request-cli/blob/master/tests/run.sh) is a thorough reference.
+[This test script](https://github.com/warren-bank/node-request-cli/blob/master/tests/1-run.sh) is a thorough reference.
 
 The following examples should serve as a quick reference:
 

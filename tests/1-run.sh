@@ -31,6 +31,7 @@ if [ ! -d "$workspace" ];then
   mkdir "${workspace}/content-disposition"
   mkdir "${workspace}/page-requisites-1-same-host"
   mkdir "${workspace}/page-requisites-2-all-hosts"
+  mkdir "${workspace}/proxy"
 else
   cd "$workspace"
 fi
@@ -262,3 +263,39 @@ echo '----- [page-requisites-2-all-hosts] ----------------------------------'
 # ------------------
 # download a single webpage with all of its assets (ie: non-html links) from all hosts
 nget -P "${workspace}/page-requisites-2-all-hosts" -sH --page-requisites --url "https://hexdocs.pm/crawler/1.1.2/readme.html" -S >"${workspace}/page-requisites-2-all-hosts/hexdocs.pm.log" 2>&1
+
+# ------------------
+# using:
+#   https://getflix.zendesk.com/hc/en-gb/search?query=proxy&commit=Search
+#   https://getflix.zendesk.com/hc/en-gb/articles/115000687823-Firefox-Squid3-Proxy-Settings
+#     Firefox instructions use port: 3128 (http)
+#   https://getflix.zendesk.com/hc/en-gb/articles/115000659386-Vuze-Socks5-Proxy-Settings
+#     Vuze instructions use port: 1080 (socks5)
+#
+#   https://getflix.zendesk.com/hc/en-gb/articles/204476204-Full-VPN-Server-Locations-and-Addresses
+#     list of all servers
+
+# ------------------
+# configs:
+# ------------------
+[ -z "$HOME" ] && HOME='/c'
+source "${HOME}/getflix_account.sh"
+# ------------------
+getflix_server='us-dl2.serverlocation.co'
+getflix_username="$GETFLIX_USERNAME"
+getflix_password="$GETFLIX_PASSWORD"
+# ------------------
+getflix_protocol='http'
+getflix_port='3128'
+getflix_url_http="${getflix_protocol}://${getflix_username}:${getflix_password}@${getflix_server}:${getflix_port}"
+# ------------------
+getflix_protocol='socks5'
+getflix_port='1080'
+getflix_url_socks5="${getflix_protocol}://${getflix_username}:${getflix_password}@${getflix_server}:${getflix_port}"
+
+# ------------------
+echo '----- [proxy] --------------------------------------------------------'
+# ------------------
+# display IP and geo-location of proxied request as observed by the destination server
+nget --proxy "$getflix_url_http"   --url "http://ipv4.ipleak.net/json/" -O "-" >"${workspace}/proxy/http.json"   2>&1
+nget --proxy "$getflix_url_socks5" --url "http://ipv4.ipleak.net/json/" -O "-" >"${workspace}/proxy/socks5.json" 2>&1

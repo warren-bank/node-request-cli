@@ -32,6 +32,7 @@ if not exist "%workspace%" (
   mkdir "%workspace%\content-disposition"
   mkdir "%workspace%\page-requisites-1-same-host"
   mkdir "%workspace%\page-requisites-2-all-hosts"
+  mkdir "%workspace%\proxy"
 ) else (
   cd "%workspace%"
 )
@@ -264,3 +265,39 @@ echo ----- [page-requisites-2-all-hosts] ----------------------------------
 rem :: ------------------
 rem :: download a single webpage with all of its assets (ie: non-html links) from all hosts
 call nget -P "%workspace%\page-requisites-2-all-hosts" -sH --page-requisites --url "https://hexdocs.pm/crawler/1.1.2/readme.html" -S >"%workspace%\page-requisites-2-all-hosts\hexdocs.pm.log" 2>&1
+
+rem :: ------------------
+rem :: using:
+rem ::   https://getflix.zendesk.com/hc/en-gb/search?query=proxy&commit=Search
+rem ::   https://getflix.zendesk.com/hc/en-gb/articles/115000687823-Firefox-Squid3-Proxy-Settings
+rem ::     Firefox instructions use port: 3128 (http)
+rem ::   https://getflix.zendesk.com/hc/en-gb/articles/115000659386-Vuze-Socks5-Proxy-Settings
+rem ::     Vuze instructions use port: 1080 (socks5)
+rem ::
+rem ::   https://getflix.zendesk.com/hc/en-gb/articles/204476204-Full-VPN-Server-Locations-and-Addresses
+rem ::     list of all servers
+
+rem :: ------------------
+rem :: configs:
+rem :: ------------------
+if not defined HOME set HOME=C:
+call "%HOME%\getflix_account.bat"
+rem :: ------------------
+set getflix_server=us-dl2.serverlocation.co
+set getflix_username=%GETFLIX_USERNAME%
+set getflix_password=%GETFLIX_PASSWORD%
+rem :: ------------------
+set getflix_protocol=http
+set getflix_port=3128
+set getflix_url_http="%getflix_protocol%://%getflix_username%:%getflix_password%@%getflix_server%:%getflix_port%"
+rem :: ------------------
+set getflix_protocol=socks5
+set getflix_port=1080
+set getflix_url_socks5="%getflix_protocol%://%getflix_username%:%getflix_password%@%getflix_server%:%getflix_port%"
+
+rem :: ------------------
+echo ----- [proxy] --------------------------------------------------------
+rem :: ------------------
+rem :: display IP and geo-location of proxied request as observed by the destination server
+call nget --proxy %getflix_url_http%   --url "http://ipv4.ipleak.net/json/" -O "-" >"%workspace%\proxy\http.json"   2>&1
+call nget --proxy %getflix_url_socks5% --url "http://ipv4.ipleak.net/json/" -O "-" >"%workspace%\proxy\socks5.json" 2>&1

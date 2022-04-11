@@ -318,6 +318,48 @@ options (curl aliases):
 "--output" <filepath>
 "--output-document" <filepath>
 
+=======================
+options (proxy server):
+=======================
+
+Note:
+    When options allow for an environment variable
+    to serve as an alternative method to specify a value,
+    the command-line parameter always takes preference.
+
+"--no-proxy"
+    Specify that no requests are tunneled through any proxy server.
+
+"-x" <URL>
+"--proxy" <URL>
+    Specify the connection URL for a proxy server.
+    HTTP and HTTPS requests tunnel through the same proxy server.
+    Format of URL:
+      <protocol>://<auth>@<host>:<port>
+    Where:
+      <protocol> is any of the following values:
+        'http','https','socks','socks4','socks4a','socks5','socks5h'
+      <auth> is "<username>:<password>" in clear text,
+        which is used to send a Basic 'Proxy-Authorization' header
+      <host> is required.
+    Defaults:
+      <protocol> = 'http'
+      <port>     = 80 (http), 443 (https), 1080 (socks*)
+    Environment variable:
+      \`proxy\`
+
+"--proxy-http" <URL>
+    Specify the connection URL for a proxy server.
+    HTTP requests tunnel through the proxy server.
+    Environment variable:
+      \`http_proxy\`
+
+"--proxy-https" <URL>
+    Specify the connection URL for a proxy server.
+    HTTPS requests tunnel through the proxy server.
+    Environment variable:
+      \`https_proxy\`
+
 ======================
 options (web crawler):
 ======================

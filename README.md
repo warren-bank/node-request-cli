@@ -363,6 +363,13 @@ Note:
     Defaults:
       <protocol> = 'http'
       <port>     = 80 (http), 443 (https), 1080 (socks*)
+    Notes:
+      <auth> is URL decoded to allow for special characters.
+      For example, a password is allowed to contain the '@' character.
+      If this character is not URL encoded, then the URL is broken:
+        socks5://username:p@ssword@host
+      The correct connection URL is:
+        socks5://username:p%40ssword@host
     Environment variable:
       `proxy`
 

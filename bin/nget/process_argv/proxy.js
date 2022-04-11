@@ -58,6 +58,9 @@ const convert_to_proxy_agent = (cache, secureEndpoint, url) => {
     if (!parsed_url.hostname && !parsed_url.host)
       throw false
 
+    if (parsed_url.auth)
+      parsed_url.auth = decodeURIComponent(parsed_url.auth)
+
     let protocol
     protocol = parsed_url.protocol || 'http'
     protocol = protocol.toLowerCase()

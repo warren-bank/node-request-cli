@@ -5,10 +5,11 @@ const fs   = require('fs')
 
 const process_post_data = require('./process_argv/process_post_data')
 
+const workarounds = require('./process_argv/workarounds')
 const curl        = require('./process_argv/curl')
 const proxy       = require('./process_argv/proxy')
 const web_crawler = require('./process_argv/web_crawler')
-const addons      = [curl, proxy, web_crawler]
+const addons      = [workarounds, curl, proxy, web_crawler]  // order is important
 
 const argv_flags = {
   "--help":                                 {bool: true},

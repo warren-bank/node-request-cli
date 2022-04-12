@@ -51,11 +51,30 @@ options (general):
             or the current working directory
       - all subsequent values are ignored as comments
 
-"--mc" <integer>
+"-mc" <integer>
 "--max-concurrency" <integer>
 "--threads" <integer>
     Specify the maximum number of URLs to download in parallel.
     The default is 1, which processes the download queue sequentially.
+    Special case:
+        When the size of the download queue is 1,
+        then the single URL will be downloaded concurrently in chunks.
+    This option pairs well with: "--chunk-size"
+
+"-cs" <integer>
+"--chunk-size" <integer>
+    Specify a fixed value for the size of each concurrent chunk.
+    Unit: MB
+    This option is only used when:
+      1. "--max-concurrency" is greater than 1
+      2. the number of URLs to download is equal to 1
+    By default:
+      1. the size of each concurrent chunk is dynamic
+      2. its value is the total size of the single URL to download
+         divided by "--max-concurrency"
+      3. this methodology will usually result in every thread
+         completing the download of its assigned chunk
+         at approximately the same time
 
 "-w" <integer>
 "--wait" <integer>

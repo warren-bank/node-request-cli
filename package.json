@@ -1,6 +1,6 @@
 {
   "name": "@warren-bank/node-request-cli",
-  "version": "4.0.14",
+  "version": "4.0.15",
   "main": "lib/process_cli.js",
   "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, proxy, redirects, cookies, content-encoding, multipart/form-data, recursive website crawling and mirroring.",
   "author": "Warren Bank (https://github.com/warren-bank)",
@@ -26,6 +26,7 @@
     "url": "https://github.com/warren-bank/node-request-cli"
   },
   "keywords": [
+    "nget",
     "request",
     "http request client",
     "http client",

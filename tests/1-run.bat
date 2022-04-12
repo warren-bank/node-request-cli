@@ -33,6 +33,7 @@ if not exist "%workspace%" (
   mkdir "%workspace%\page-requisites-1-same-host"
   mkdir "%workspace%\page-requisites-2-all-hosts"
   mkdir "%workspace%\proxy"
+  mkdir "%workspace%\concurrency"
 ) else (
   cd "%workspace%"
 )
@@ -59,7 +60,7 @@ call nget --url "https://github.com/warren-bank/node-request/archive/master.zip"
 rem :: -------------
 echo ----- [i_now] --------------------------------------------------------
 rem :: -------------
-call nget                                                                        -P "%workspace%\i_now" -i "%DIR%\.etc\urls_now.txt" --mc 5
+call nget                                                                        -P "%workspace%\i_now" -i "%DIR%\.etc\urls_now.txt" -mc 5
 call node "%DIR%\.etc\urls_now.js" "%workspace%\i_now" >"%workspace%\i_now\summary.json"
 
 rem :: -------------
@@ -301,3 +302,14 @@ rem :: ------------------
 rem :: display IP and geo-location of proxied request as observed by the destination server
 call nget --proxy %getflix_url_http%   --url "http://ipv4.ipleak.net/json/" -O "-" >"%workspace%\proxy\http.json"   2>&1
 call nget --proxy %getflix_url_socks5% --url "http://ipv4.ipleak.net/json/" -O "-" >"%workspace%\proxy\socks5.json" 2>&1
+
+rem :: ------------------
+rem :: using:
+rem ::   https://archive.org/details/BigBuckBunny_124
+
+rem :: ------------------
+echo ----- [concurrency] --------------------------------------------------
+rem :: ------------------
+rem :: download a single large file in 10MB chunks using 4x parallel threads
+set video_url="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
+call nget --max-concurrency 4 --chunk-size 10 --url %video_url% -O "%workspace%\concurrency\video.mp4" -S >"%workspace%\concurrency\video.log" 2>&1

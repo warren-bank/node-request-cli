@@ -18,6 +18,7 @@ const argv_flags = {
   "--url":                                  {},
   "--input-file":                           {file: "lines"},
   "--max-concurrency":                      {num:  "int"},
+  "--chunk-size":                           {num:  "int"},
   "--wait":                                 {num:  "int"},
   "--random-wait":                          {bool: true},
 
@@ -63,7 +64,8 @@ const argv_flag_aliases = {
   "--version":                              ["-V"],
   "--url":                                  ["-u"],
   "--input-file":                           ["-i"],
-  "--max-concurrency":                      ["--mc", "--threads"],
+  "--max-concurrency":                      ["-mc", "--threads"],
+  "--chunk-size":                           ["-cs"],
   "--wait":                                 ["-w"],
   "--user-agent":                           ["-U"],
   "--directory-prefix":                     ["-P"],

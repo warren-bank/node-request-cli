@@ -304,10 +304,66 @@ nget --proxy "$getflix_url_socks5" --url "http://ipv4.ipleak.net/json/" -O "-" >
 # ------------------
 # using:
 #   https://archive.org/details/BigBuckBunny_124
+video_url='https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4'
+
+export STARTTIME
+export ENDTIME
 
 # ------------------
-echo '----- [concurrency] --------------------------------------------------'
+echo '----- [concurrency baseline w/ only 1x thread] -----------------------'
+# ------------------
+# download a single large file in a single request using only 1x thread
+threads='1'
+STARTTIME=$(date +%s)
+nget --max-concurrency "$threads" --chunk-size 10 --url "$video_url" -O "${workspace}/concurrency/video.mp4" -S >"${workspace}/concurrency/${threads}x-threads.log" 2>&1
+ENDTIME=$(date +%s)
+source "${DIR}/.etc/calculate_elapsed_time.sh"
+elapsed_msg="Time to perform download: ${DURATION}"
+echo "$elapsed_msg"
+echo '' >>"${workspace}/concurrency/${threads}x-threads.log"
+echo "$elapsed_msg" >>"${workspace}/concurrency/${threads}x-threads.log"
+rm -f "${workspace}/concurrency/video.mp4"
+
+# ------------------
+echo '----- [concurrency w/ 2x threads] ------------------------------------'
+# ------------------
+# download a single large file in 10MB chunks using 2x parallel threads
+threads='2'
+STARTTIME=$(date +%s)
+nget --max-concurrency "$threads" --chunk-size 10 --url "$video_url" -O "${workspace}/concurrency/video.mp4" -S >"${workspace}/concurrency/${threads}x-threads.log" 2>&1
+ENDTIME=$(date +%s)
+source "${DIR}/.etc/calculate_elapsed_time.sh"
+elapsed_msg="Time to perform download: ${DURATION}"
+echo "$elapsed_msg"
+echo '' >>"${workspace}/concurrency/${threads}x-threads.log"
+echo "$elapsed_msg" >>"${workspace}/concurrency/${threads}x-threads.log"
+rm -f "${workspace}/concurrency/video.mp4"
+
+# ------------------
+echo '----- [concurrency w/ 4x threads] ------------------------------------'
 # ------------------
 # download a single large file in 10MB chunks using 4x parallel threads
-video_url='https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4'
-nget --max-concurrency 4 --chunk-size 10 --url "$video_url" -O "${workspace}/concurrency/video.mp4" -S >"${workspace}/concurrency/video.log" 2>&1
+threads='4'
+STARTTIME=$(date +%s)
+nget --max-concurrency "$threads" --chunk-size 10 --url "$video_url" -O "${workspace}/concurrency/video.mp4" -S >"${workspace}/concurrency/${threads}x-threads.log" 2>&1
+ENDTIME=$(date +%s)
+source "${DIR}/.etc/calculate_elapsed_time.sh"
+elapsed_msg="Time to perform download: ${DURATION}"
+echo "$elapsed_msg"
+echo '' >>"${workspace}/concurrency/${threads}x-threads.log"
+echo "$elapsed_msg" >>"${workspace}/concurrency/${threads}x-threads.log"
+rm -f "${workspace}/concurrency/video.mp4"
+
+# ------------------
+echo '----- [concurrency w/ 8x threads] ------------------------------------'
+# ------------------
+# download a single large file in 10MB chunks using 8x parallel threads
+threads='8'
+STARTTIME=$(date +%s)
+nget --max-concurrency "$threads" --chunk-size 10 --url "$video_url" -O "${workspace}/concurrency/video.mp4" -S >"${workspace}/concurrency/${threads}x-threads.log" 2>&1
+ENDTIME=$(date +%s)
+source "${DIR}/.etc/calculate_elapsed_time.sh"
+elapsed_msg="Time to perform download: ${DURATION}"
+echo "$elapsed_msg"
+echo '' >>"${workspace}/concurrency/${threads}x-threads.log"
+echo "$elapsed_msg" >>"${workspace}/concurrency/${threads}x-threads.log"

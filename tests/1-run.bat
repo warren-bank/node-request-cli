@@ -306,10 +306,63 @@ call nget --proxy %getflix_url_socks5% --url "http://ipv4.ipleak.net/json/" -O "
 rem :: ------------------
 rem :: using:
 rem ::   https://archive.org/details/BigBuckBunny_124
+set video_url="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
 
 rem :: ------------------
-echo ----- [concurrency] --------------------------------------------------
+echo ----- [concurrency baseline w/ only 1x thread] -----------------------
+rem :: ------------------
+rem :: download a single large file in a single request using only 1x thread
+set threads=1
+set STARTTIME=%TIME%
+call nget --max-concurrency %threads% --chunk-size 10 --url %video_url% -O "%workspace%\concurrency\video.mp4" -S >"%workspace%\concurrency\%threads%x-threads.log" 2>&1
+set ENDTIME=%TIME%
+call "%DIR%\.etc\calculate_elapsed_time.bat"
+set elapsed_msg=Time to perform download: %DURATION%
+echo %elapsed_msg%
+echo.>>"%workspace%\concurrency\%threads%x-threads.log"
+echo %elapsed_msg%>>"%workspace%\concurrency\%threads%x-threads.log"
+del /Q /F "%workspace%\concurrency\video.mp4"
+
+rem :: ------------------
+echo ----- [concurrency w/ 2x threads] ------------------------------------
+rem :: ------------------
+rem :: download a single large file in 10MB chunks using 2x parallel threads
+set threads=2
+set STARTTIME=%TIME%
+call nget --max-concurrency %threads% --chunk-size 10 --url %video_url% -O "%workspace%\concurrency\video.mp4" -S >"%workspace%\concurrency\%threads%x-threads.log" 2>&1
+set ENDTIME=%TIME%
+call "%DIR%\.etc\calculate_elapsed_time.bat"
+set elapsed_msg=Time to perform download: %DURATION%
+echo %elapsed_msg%
+echo.>>"%workspace%\concurrency\%threads%x-threads.log"
+echo %elapsed_msg%>>"%workspace%\concurrency\%threads%x-threads.log"
+del /Q /F "%workspace%\concurrency\video.mp4"
+
+rem :: ------------------
+echo ----- [concurrency w/ 4x threads] ------------------------------------
 rem :: ------------------
 rem :: download a single large file in 10MB chunks using 4x parallel threads
-set video_url="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-call nget --max-concurrency 4 --chunk-size 10 --url %video_url% -O "%workspace%\concurrency\video.mp4" -S >"%workspace%\concurrency\video.log" 2>&1
+set threads=4
+set STARTTIME=%TIME%
+call nget --max-concurrency %threads% --chunk-size 10 --url %video_url% -O "%workspace%\concurrency\video.mp4" -S >"%workspace%\concurrency\%threads%x-threads.log" 2>&1
+set ENDTIME=%TIME%
+call "%DIR%\.etc\calculate_elapsed_time.bat"
+set elapsed_msg=Time to perform download: %DURATION%
+echo %elapsed_msg%
+echo.>>"%workspace%\concurrency\%threads%x-threads.log"
+echo %elapsed_msg%>>"%workspace%\concurrency\%threads%x-threads.log"
+del /Q /F "%workspace%\concurrency\video.mp4"
+
+rem :: ------------------
+echo ----- [concurrency w/ 8x threads] ------------------------------------
+rem :: ------------------
+rem :: download a single large file in 10MB chunks using 8x parallel threads
+set threads=8
+set STARTTIME=%TIME%
+call nget --max-concurrency %threads% --chunk-size 10 --url %video_url% -O "%workspace%\concurrency\video.mp4" -S >"%workspace%\concurrency\%threads%x-threads.log" 2>&1
+set ENDTIME=%TIME%
+call "%DIR%\.etc\calculate_elapsed_time.bat"
+set elapsed_msg=Time to perform download: %DURATION%
+echo %elapsed_msg%
+echo.>>"%workspace%\concurrency\%threads%x-threads.log"
+echo %elapsed_msg%>>"%workspace%\concurrency\%threads%x-threads.log"

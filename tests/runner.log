@@ -50,4 +50,11 @@ found 0 vulnerabilities
 ----- [page-requisites-1-same-host] ----------------------------------
 ----- [page-requisites-2-all-hosts] ----------------------------------
 ----- [proxy] --------------------------------------------------------
------ [concurrency] --------------------------------------------------
+----- [concurrency baseline w/ only 1x thread] -----------------------
+Time to perform download: 0 hr, 2 min, 19 sec
+----- [concurrency w/ 2x threads] ------------------------------------
+Time to perform download: 0 hr, 1 min, 12 sec
+----- [concurrency w/ 4x threads] ------------------------------------
+Time to perform download: 0 hr, 0 min, 42 sec
+----- [concurrency w/ 8x threads] ------------------------------------
+Time to perform download: 0 hr, 0 min, 30 sec

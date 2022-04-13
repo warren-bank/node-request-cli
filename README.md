@@ -1,6 +1,6 @@
 ### [Nget](https://github.com/warren-bank/node-request-cli)
 
-An extremely lightweight HTTP request client for the command-line. Supports: http, https, proxy, redirects, cookies, content-encoding, multipart/form-data, recursive website crawling and mirroring.
+An extremely lightweight HTTP request client for the command-line. Supports: http, https, proxy, redirects, cookies, content-encoding, multipart/form-data, multi-threading, recursive website crawling and mirroring.
 
 #### Installation:
 
@@ -662,8 +662,11 @@ options:
 The following examples should serve as a quick reference:
 
 ```bash
-nget --no-check-certificate -nc --content-disposition \
-  --max-concurrency 10 \
+nget --max-concurrency 4 --chunk-size 10 \
+  --url 'https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4'
+
+nget --max-concurrency 10 \
+  --no-check-certificate -nc --content-disposition \
   -i '/path/to/input-urls.list' \
   -P '/path/to/output-directory'
 

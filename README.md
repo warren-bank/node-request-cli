@@ -2,12 +2,6 @@
 
 An extremely lightweight HTTP request client for the command-line. Supports: http, https, proxy, redirects, cookies, content-encoding, multipart/form-data, multi-threading, recursive website crawling and mirroring.
 
-#### Installation:
-
-```bash
-npm install --global @warren-bank/node-request-cli
-```
-
 #### Summary:
 
 * [request](https://github.com/warren-bank/node-request) implements the HTTP request client as a javascript library
@@ -15,6 +9,14 @@ npm install --global @warren-bank/node-request-cli
   - allow the user to access and configure much of the functionality of the underlying javascript library
   - follow a naming convention that is intended to be consistent with `wget`
   - include several aliases that follow a naming convention that is intended to also be consistent (where possible) with `curl`
+
+- - - -
+
+#### Installation:
+
+```bash
+npm install --global @warren-bank/node-request-cli
+```
 
 #### Usage:
 
@@ -700,18 +702,24 @@ nget -O '-' \
   * all functionality can be imported as a function:<br>`const {download} = require('@warren-bank/node-request-cli')`
   * all command-line options can be specified at runtime in a configuration object passed to the function:<br>`download({})`
 
+- - - -
+
 #### Requirements:
 
-* Node version: v6.4.0 (and higher)
+* Node.js version: v10.12.0 (and higher)
   * [ES6 support](http://node.green/)
-    * v0.12.18+: Promise
-    * v4.08.03+: Object shorthand methods
-    * v5.12.00+: spread operator
-    * v6.04.00+: Proxy constructor
-    * v6.04.00+: Proxy 'apply' handler
-    * v6.04.00+: Reflect.apply
-  * tested in:
-    * v7.9.0
+    * v0.12.18+: [Promise](https://node.green/#ES2015-built-ins-Promise)
+    * v4.08.03+: [Object shorthand methods](https://node.green/#ES2015-syntax-object-literal-extensions)
+    * v5.12.00+: [spread syntax for iterable objects](https://node.green/#ES2015-syntax-spread-syntax-for-iterable-objects)
+    * v6.04.00+: [rest parameters](https://node.green/#ES2015-syntax-rest-parameters)
+    * v6.04.00+: [destructuring, declarations](https://node.green/#ES2015-syntax-destructuring--declarations)
+    * v6.04.00+: [Proxy constructor](https://node.green/#ES2015-built-ins-Proxy)
+    * v6.04.00+: [Proxy 'apply' handler](https://node.green/#ES2015-built-ins-Proxy)
+    * v6.04.00+: [Reflect.apply](https://node.green/#ES2015-built-ins-Reflect)
+    * v7.10.01+: [async functions](https://node.green/#ES2017-features-async-functions)
+    * v8.06.00+: [object rest/spread properties](https://node.green/#ES2018-features-object-rest-spread-properties)
+  * libraries and dependencies
+    * v10.12.00+: [`fs.mkdirSync()` with `recursive` option](https://nodejs.org/api/fs.html#fsmkdirsyncpath-options)
 
 #### Legal:
 

@@ -706,7 +706,7 @@ nget -O '-' \
 
 #### Requirements:
 
-* Node.js version: v10.12.0 (and higher)
+* Node.js version: v8.6.0 (and higher)
   * [ES6 support](http://node.green/)
     * v0.12.18+: [Promise](https://node.green/#ES2015-built-ins-Promise)
     * v4.08.03+: [Object shorthand methods](https://node.green/#ES2015-syntax-object-literal-extensions)
@@ -718,8 +718,6 @@ nget -O '-' \
     * v6.04.00+: [Reflect.apply](https://node.green/#ES2015-built-ins-Reflect)
     * v7.10.01+: [async functions](https://node.green/#ES2017-features-async-functions)
     * v8.06.00+: [object rest/spread properties](https://node.green/#ES2018-features-object-rest-spread-properties)
-  * libraries and dependencies
-    * v10.12.00+: [`fs.mkdirSync()` with `recursive` option](https://nodejs.org/api/fs.html#fsmkdirsyncpath-options)
 
 #### Legal:
 

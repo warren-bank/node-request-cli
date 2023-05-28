@@ -707,17 +707,9 @@ nget -O '-' \
 #### Requirements:
 
 * Node.js version: v8.6.0 (and higher)
-  * [ES6 support](http://node.green/)
-    * v0.12.18+: [Promise](https://node.green/#ES2015-built-ins-Promise)
-    * v4.08.03+: [Object shorthand methods](https://node.green/#ES2015-syntax-object-literal-extensions)
-    * v5.12.00+: [spread syntax for iterable objects](https://node.green/#ES2015-syntax-spread-syntax-for-iterable-objects)
-    * v6.04.00+: [rest parameters](https://node.green/#ES2015-syntax-rest-parameters)
-    * v6.04.00+: [destructuring, declarations](https://node.green/#ES2015-syntax-destructuring--declarations)
-    * v6.04.00+: [Proxy constructor](https://node.green/#ES2015-built-ins-Proxy)
-    * v6.04.00+: [Proxy 'apply' handler](https://node.green/#ES2015-built-ins-Proxy)
-    * v6.04.00+: [Reflect.apply](https://node.green/#ES2015-built-ins-Reflect)
-    * v7.10.01+: [async functions](https://node.green/#ES2017-features-async-functions)
-    * v8.06.00+: [object rest/spread properties](https://node.green/#ES2018-features-object-rest-spread-properties)
+  - transitive [dependency](https://github.com/warren-bank/node-request-cli/blob/master/package.json#L14-L15) requirements:
+    * v8.06.00+: [`@warren-bank/node-process-argv`](https://github.com/warren-bank/node-process-argv#requirements)
+    * v8.06.00+: [`@warren-bank/node-request`](https://github.com/warren-bank/node-request#requirements)
 
 #### Legal:
 

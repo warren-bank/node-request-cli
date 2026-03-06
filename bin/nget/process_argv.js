@@ -48,7 +48,7 @@ const argv_flags = {
   "--content-disposition":                  {bool: true},
   "--trust-server-names":                   {bool: true},
   "--no-querystring":                       {bool: true},
-  "--restrict-file-names":                  {enum: ["windows","unix","nocontrol","ascii","lowercase","uppercase"], many: true},
+  "--restrict-file-names":                  {enum: ["windows","unix","nocontrol","ascii","lowercase","uppercase","uri-encode-basename","uri-encode-querystring"], many: true},
   "--no-clobber":                           {bool: true},
   "--continue":                             {bool: true},
 

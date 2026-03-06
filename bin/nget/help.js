@@ -249,6 +249,10 @@ options (general):
           Modifier to convert all uppercase characters to lowercase.
       "uppercase"
           Modifier to convert all lowercase characters to uppercase.
+      "uri-encode-basename"
+          Modifier to URI encode URL basename.
+      "uri-encode-querystring"
+          Modifier to URI encode URL querystring.
     This flag can be repeated to combine character set restrictions.
 
 "-nc"

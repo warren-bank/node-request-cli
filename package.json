@@ -1,6 +1,6 @@
 {
   "name": "@warren-bank/node-request-cli",
-  "version": "4.0.26",
+  "version": "4.0.27",
   "main": "lib/process_cli.js",
   "description": "An extremely lightweight HTTP request client for the command-line. Supports: http, https, proxy, redirects, cookies, content-encoding, multipart/form-data, multi-threading, recursive website crawling and mirroring.",
   "author": "Warren Bank (https://github.com/warren-bank)",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@warren-bank/mkdir-sync": "^1.0.2",
     "@warren-bank/node-process-argv": "^1.2.2",
-    "@warren-bank/node-request": "^2.0.14",
+    "@warren-bank/node-request": "^2.0.15",
     "http-proxy-agent": "5.0.0",
     "https-proxy-agent": "5.0.0",
     "socks-proxy-agent": "5.0.0"
@@ -68,6 +68,7 @@
     "spider",
     "crawler",
     "mirror",
-    "downloader"
+    "downloader",
+    "TLS fingerprint"
   ]
 }

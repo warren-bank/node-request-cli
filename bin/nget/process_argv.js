@@ -21,6 +21,7 @@ const argv_flags = {
   "--chunk-size":                           {num:  "int"},
   "--wait":                                 {num:  "int"},
   "--random-wait":                          {bool: true},
+  "--random-tls-fingerprint":               {bool: true},
 
   "--headers":                              {file: "json"},
   "--referer":                              {},

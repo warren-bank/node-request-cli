@@ -68,6 +68,10 @@ options (general):
     Converts wait duration to milliseconds,
     and multiplies by a randomized factor in the range 0.5 to 1.5.
 
+"--random-tls-fingerprint"
+    Randomize the order of the list of cipher suites,
+    which is sent in the TLS handshake for HTTPS requests.
+
 "--headers" <filepath>
     Read request headers from a local text file.
     Use "-" to read from standard input.

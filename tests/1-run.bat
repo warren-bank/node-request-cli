@@ -12,8 +12,6 @@ if not exist "%workspace%" (
 
   call npm init -y
   call npm install --save "%DIR%\.."
-  cls
-  pause
 
   mkdir "%workspace%\O"
   mkdir "%workspace%\P"
@@ -33,6 +31,7 @@ if not exist "%workspace%" (
   mkdir "%workspace%\page-requisites-1-same-host"
   mkdir "%workspace%\page-requisites-2-all-hosts"
   mkdir "%workspace%\proxy"
+  mkdir "%workspace%\tls-fingerprint"
   mkdir "%workspace%\concurrency"
 ) else (
   cd "%workspace%"
@@ -302,6 +301,15 @@ rem :: ------------------
 rem :: display IP and geo-location of proxied request as observed by the destination server
 call nget --proxy %getflix_url_http%   --url "http://ipv4.ipleak.net/json/" -O "-" >"%workspace%\proxy\http.json"   2>&1
 call nget --proxy %getflix_url_socks5% --url "http://ipv4.ipleak.net/json/" -O "-" >"%workspace%\proxy\socks5.json" 2>&1
+
+rem :: ------------------
+echo ----- [tls-fingerprint] ----------------------------------------------
+rem :: ------------------
+rem :: display ordered list of cipher suites sent in TLS handshake, and computed TLS fingerprints (ja3,ja4)
+FOR /L %%N IN (1, 1, 3) DO (
+  call nget --random-tls-fingerprint --url "https://tls.peet.ws/api/all" -O "-" >"%workspace%\tls-fingerprint\%%N.json" 2>&1
+  call node "%DIR%\.etc\print_tls_fingerprint.js" "%workspace%\tls-fingerprint\%%N.json" "Request %%N: "
+)
 
 rem :: ------------------
 rem :: using:

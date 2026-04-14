@@ -89,7 +89,7 @@ options (general):
     and multiplies by a randomized factor in the range 0.5 to 1.5.
 
 "--random-tls-fingerprint"
-    Randomize the order of the list of cipher suites,
+    Randomly modify the list of cipher suites,
     which is sent in the TLS handshake for HTTPS requests.
 
 "--headers" <filepath>
